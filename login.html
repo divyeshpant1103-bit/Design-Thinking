@@ -1,0 +1,366 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>GEU Nexus | Secure Login</title>
+    <link rel="stylesheet" href="style.css">
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=DM+Sans:wght@400;500;600;700&family=Syne:wght@600;700;800&display=swap');
+
+        :root {
+            --bg-color: #070d1a; /* Deep Navy */
+            --font-main: 'DM Sans', sans-serif;
+            --font-display: 'Syne', sans-serif;
+            
+            /* GEU Gold Theme Variables */
+            --theme-color: #C9A84C; 
+            --theme-glow-rgb: 201, 168, 76;
+            --shade-color: #1B3A7A; /* Navy Shade */
+            --bulb-color: #FFF9E6;
+            --light-opacity: 0.15;
+            --face-awake: 1;
+            --face-sleep: 0;
+        }
+
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+
+        body {
+            background-color: var(--bg-color);
+            background-image: 
+                linear-gradient(rgba(201, 168, 76, 0.03) 1px, transparent 1px),
+                linear-gradient(90deg, rgba(201, 168, 76, 0.03) 1px, transparent 1px);
+            background-size: 40px 40px;
+            color: #ffffff;
+            font-family: var(--font-main);
+            min-height: 100vh;
+            display: flex;
+            justify-content: center; 
+            align-items: center;    
+            overflow-x: hidden;
+            padding: 2rem;
+        }
+
+        /* Header Logo */
+        .top-header {
+            position: absolute;
+            top: 2.5rem;
+            left: 50%;
+            transform: translateX(-50%);
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            z-index: 20;
+        }
+        .logo-icon {
+            width: 46px; height: 46px;
+            object-fit: contain;
+            border-radius: 50%;
+            border: 2px solid var(--theme-color);
+            background: white;
+            transition: all 0.6s ease;
+            box-shadow: 0 0 15px rgba(var(--theme-glow-rgb), 0.4);
+        }
+        .logo-text {
+            font-family: var(--font-display);
+            font-size: 1.4rem;
+            font-weight: 800;
+            letter-spacing: -0.02em;
+            color: #fff;
+        }
+        .logo-text span {
+            color: var(--theme-color);
+            transition: color 0.6s ease;
+        }
+
+        .main-wrapper {
+            display: flex;
+            flex-direction: row;
+            justify-content: space-evenly;
+            align-items: center;
+            width: 100%;
+            max-width: 1100px;
+            gap: 4rem;
+            position: relative;
+            z-index: 10;
+            margin-top: 3rem;
+        }
+
+        /* Lamp Section */
+        .lamp-section { flex: 1; display: flex; flex-direction: column; align-items: center; position: relative; }
+        .lamp-svg { width: 100%; max-width: 320px; height: auto; overflow: visible; filter: drop-shadow(0 20px 30px rgba(0,0,0,0.5)); z-index: 2; }
+        .shade-main { fill: var(--shade-color); transition: fill 0.6s ease; }
+        .shade-inner { fill: var(--bulb-color); transition: fill 0.6s ease; }
+        .light-cone { opacity: var(--light-opacity); transition: opacity 0.6s ease; }
+        .face-sleep { opacity: var(--face-sleep); transition: opacity 0.3s ease; }
+        .face-awake { opacity: var(--face-awake); transition: opacity 0.3s ease; }
+
+        .pull-string-group { cursor: pointer; transform-origin: top; transition: transform 0.2s cubic-bezier(0.175, 0.885, 0.32, 1.275); }
+        .pull-string-group:hover .string-handle { stroke: var(--theme-color); transition: stroke 0.3s ease;}
+
+        .lamp-ambient-glow {
+            position: absolute; width: 350px; height: 350px;
+            background: radial-gradient(circle, rgba(var(--theme-glow-rgb), 0.15) 0%, transparent 60%);
+            top: 40%; left: 50%; transform: translate(-50%, -50%);
+            z-index: 1; transition: background 0.6s ease; pointer-events: none;
+        }
+
+        .pull-hint {
+            margin-top: -20px; font-size: 0.75rem; letter-spacing: 3px;
+            color: #5A6380; font-weight: 700; z-index: 2;
+        }
+
+        /* Auth Card Area */
+        .auth-container { flex: 1; display: flex; justify-content: center; align-items: center; width: 100%; z-index: 5; }
+
+        .auth-card {
+            width: 100%; max-width: 420px;
+            background: rgba(13, 34, 84, 0.4);
+            backdrop-filter: blur(10px);
+            border-radius: 16px;
+            border: 1px solid #1B3A7A;
+            border-top-color: var(--theme-color);
+            padding: 2.5rem 2rem;
+            box-shadow: 0 10px 40px rgba(0,0,0,0.5), inset 0 0 20px rgba(var(--theme-glow-rgb), 0.05);
+            transition: all 0.6s ease;
+            position: relative;
+        }
+
+        .card-breadcrumb {
+            font-size: 0.7rem; color: var(--theme-color); letter-spacing: 2px;
+            margin-bottom: 1rem; font-weight: 700; transition: color 0.6s ease;
+        }
+
+        .auth-card h2 { 
+            font-family: var(--font-display); font-size: 2.2rem; font-weight: 800; 
+            line-height: 1.1; margin-bottom: 0.5rem; color: #fff;
+        }
+        .auth-card h2 .highlight { color: var(--theme-color); display: block; transition: color 0.6s ease; }
+        .subtitle { font-size: 0.9rem; color: #9BA3BE; margin-bottom: 1.5rem; }
+
+        .portal-status {
+            display: flex; align-items: center; gap: 8px; font-size: 0.75rem;
+            color: #9BA3BE; letter-spacing: 1px; margin-bottom: 2rem; font-weight: 700;
+        }
+
+        .status-dot {
+            width: 8px; height: 8px; background-color: var(--theme-color);
+            border-radius: 50%; box-shadow: 0 0 10px var(--theme-color);
+            animation: pulse 2s infinite; transition: all 0.6s ease;
+        }
+
+        @keyframes pulse { 0% { transform: scale(0.95); opacity: 0.7; } 50% { transform: scale(1.1); opacity: 1; } 100% { transform: scale(0.95); opacity: 0.7; } }
+
+        .input-group { margin-bottom: 1.2rem; display: flex; flex-direction: column; position: relative;}
+        .input-group label { font-size: 0.75rem; color: #9BA3BE; margin-bottom: 0.5rem; font-weight: 700; text-transform: uppercase; letter-spacing: 0.05em;}
+        
+        .input-wrapper { position: relative; display: flex; align-items: center; }
+        .input-prefix { position: absolute; left: 1rem; color: #5A6380; font-weight: 600; }
+
+        .input-group input {
+            width: 100%; background: rgba(7, 13, 26, 0.6); 
+            border: 1px solid #1B3A7A; padding: 1rem 1rem 1rem 2.5rem; 
+            border-radius: 12px; color: #fff; outline: none;
+            font-family: var(--font-main); font-size: 0.95rem; transition: all 0.3s ease;
+        }
+        .input-group input:not(.has-prefix) { padding-left: 1rem; }
+        .input-group input:focus { border-color: var(--theme-color); box-shadow: 0 0 15px rgba(var(--theme-glow-rgb), 0.2); background: rgba(7, 13, 26, 0.9); }
+
+        input[type=number]::-webkit-inner-spin-button, input[type=number]::-webkit-outer-spin-button { -webkit-appearance: none; margin: 0; }
+        input[type=number] { appearance: textfield; -moz-appearance: textfield; }
+
+        .auth-btn {
+            width: 100%; padding: 1.1rem; border: none; border-radius: 12px;
+            background: var(--theme-color); color: #070d1a;
+            font-size: 1rem; font-weight: 700; cursor: pointer;
+            margin-top: 0.5rem; transition: all 0.4s ease; font-family: var(--font-main);
+        }
+        .auth-btn:hover { filter: brightness(1.1); box-shadow: 0 5px 20px rgba(var(--theme-glow-rgb), 0.4); transform: translateY(-2px); }
+
+        .auth-links { margin-top: 1.5rem; text-align: center; font-size: 0.85rem; color: #5A6380; }
+        .auth-links a { color: #9BA3BE; text-decoration: none; font-weight: 600; transition: color 0.3s ease; }
+        .auth-links a:hover { color: var(--theme-color); }
+        .forgot-pass { display: block; margin-bottom: 1rem; }
+
+        .form-container { display: none; }
+        .form-container.active { display: block; animation: fadeSlideUp 0.4s ease forwards; }
+
+        @keyframes fadeSlideUp { from { opacity: 0; transform: translateY(10px); } to { opacity: 1; transform: translateY(0); } }
+
+        @media (max-width: 850px) {
+            body { padding: 1rem; height: auto; }
+            .top-header { position: relative; top: 0; margin-bottom: 2rem; }
+            .main-wrapper { flex-direction: column; margin-top: 1rem; gap: 2rem; }
+            .lamp-svg { max-width: 250px; }
+        }
+    </style>
+</head>
+<body>
+
+    <header class="top-header">
+        <img src="logo.png" alt="GEU Nexus Logo" class="logo-icon">
+        <div class="logo-text">GEU <span>NEXUS</span></div>
+    </header>
+
+    <div class="main-wrapper">
+        <div class="lamp-section">
+            <div class="lamp-ambient-glow"></div>
+            <svg class="lamp-svg" viewBox="0 0 300 420" xmlns="http://www.w3.org/2000/svg">
+                <defs>
+                    <linearGradient id="lightConeGrad" x1="0%" y1="0%" x2="0%" y2="100%">
+                        <stop offset="0%" stop-color="#ffffff" stop-opacity="0.6" />
+                        <stop offset="100%" stop-color="#ffffff" stop-opacity="0" />
+                    </linearGradient>
+                    <clipPath id="mouthClip">
+                        <path d="M 125 155 Q 150 190 175 155 Z" />
+                    </clipPath>
+                </defs>
+
+                <polygon points="90,180 210,180 340,420 -40,420" fill="url(#lightConeGrad)" class="light-cone" />
+                <ellipse cx="150" cy="380" rx="65" ry="12" fill="#030712" />
+                <ellipse cx="150" cy="376" rx="65" ry="12" fill="#0f172a" />
+                <rect x="142" y="180" width="16" height="200" fill="#1e293b" />
+                <rect x="144" y="180" width="6" height="200" fill="#334155" /> 
+                <ellipse cx="150" cy="175" rx="95" ry="18" class="shade-inner" />
+
+                <g class="pull-string-group" onclick="toggleLamp()">
+                    <line x1="115" y1="180" x2="115" y2="270" stroke="#475569" stroke-width="2" />
+                    <rect x="111" y="270" width="8" height="30" rx="4" fill="#475569" class="string-handle" />
+                </g>
+
+                <path d="M 90 60 Q 150 45 210 60 L 245 175 Q 150 195 55 175 Z" class="shade-main" />
+
+                <g class="face-sleep">
+                    <path d="M 120 130 Q 130 140 140 130" stroke="#0f172a" stroke-width="4" fill="none" stroke-linecap="round" />
+                    <path d="M 160 130 Q 170 140 180 130" stroke="#0f172a" stroke-width="4" fill="none" stroke-linecap="round" />
+                </g>
+
+                <g class="face-awake">
+                    <path d="M 120 130 Q 130 115 140 130" stroke="#0f172a" stroke-width="4" fill="none" stroke-linecap="round" />
+                    <path d="M 160 130 Q 170 115 180 130" stroke="#0f172a" stroke-width="4" fill="none" stroke-linecap="round" />
+                    <g>
+                        <path d="M 125 155 Q 150 190 175 155 Z" fill="#0f172a" />
+                        <path d="M 140 165 Q 150 190 160 165 Z" fill="#ef4444" clip-path="url(#mouthClip)" />
+                    </g>
+                </g>
+            </svg>
+            <p class="pull-hint">PULL TO TOGGLE THEME</p>
+        </div>
+
+        <div class="auth-container">
+            <div class="auth-card">
+                
+                <div id="login-form" class="form-container active">
+                    <div class="card-breadcrumb">GEU NEXUS / AUTH</div>
+                    <h2>Welcome <span class="highlight">Back</span></h2>
+                    <p class="subtitle">Sign in to continue to your dashboard</p>
+                    
+                    <div class="portal-status">
+                        <span class="status-dot"></span> PORTAL ACTIVE
+                    </div>
+
+                    <form onsubmit="event.preventDefault(); window.location.href='index.html';">
+                        <div class="input-group">
+                            <label>University Email</label>
+                            <div class="input-wrapper">
+                                <span class="input-prefix">@</span>
+                                <input type="email" class="has-prefix" placeholder="student@geu.ac.in" required>
+                            </div>
+                        </div>
+                        <div class="input-group">
+                            <label>Password</label>
+                            <div class="input-wrapper">
+                                <span class="input-prefix">***</span>
+                                <input type="password" class="has-prefix" placeholder="Enter your password" required>
+                            </div>
+                        </div>
+                        <button type="submit" class="auth-btn">Sign In</button>
+                    </form>
+                    <div class="auth-links">
+                        <a href="#" class="forgot-pass">Forgot Password?</a>
+                        <p>Don't have an account? <a href="#" onclick="switchForm('register')">Register</a></p>
+                    </div>
+                </div>
+
+                <div id="register-form" class="form-container">
+                    <div class="card-breadcrumb">GEU NEXUS / ONBOARDING</div>
+                    <h2>Create <span class="highlight">Account</span></h2>
+                    <p class="subtitle">Register to access your student portal</p>
+                    
+                    <div class="portal-status">
+                        <span class="status-dot"></span> SECURE CONNECTION
+                    </div>
+
+                    <form onsubmit="event.preventDefault(); window.location.href='index.html';">
+                        <div class="input-group">
+                            <label>Full Name</label>
+                            <input type="text" placeholder="Enter your full name" required>
+                        </div>
+                        <div class="input-group">
+                            <label>University Email</label>
+                            <div class="input-wrapper">
+                                <span class="input-prefix">@</span>
+                                <input type="email" class="has-prefix" placeholder="student@geu.ac.in" required>
+                            </div>
+                        </div>
+                        <div class="input-group">
+                            <label>Password</label>
+                            <div class="input-wrapper">
+                                <span class="input-prefix">***</span>
+                                <input type="password" class="has-prefix" placeholder="Create a password" required>
+                            </div>
+                        </div>
+                        <button type="submit" class="auth-btn">Sign Up</button>
+                    </form>
+                    <div class="auth-links">
+                        <p>Already have an account? <a href="#" onclick="switchForm('login')">Login</a></p>
+                    </div>
+                </div>
+
+            </div>
+        </div>
+    </div>
+
+    <script>
+        function switchForm(target) {
+            const loginForm = document.getElementById('login-form');
+            const registerForm = document.getElementById('register-form');
+            if (target === 'register') {
+                loginForm.classList.remove('active');
+                registerForm.classList.add('active');
+            } else {
+                registerForm.classList.remove('active');
+                loginForm.classList.add('active');
+            }
+        }
+
+        const themes = [
+            { themeColor: "#C9A84C", themeGlowRGB: "201, 168, 76", shadeColor: "#1B3A7A", bulbColor: "#FFF9E6", lightOpacity: "0.15", faceAwake: "1", faceSleep: "0" }, // GEU Gold
+            { themeColor: "#8ab4f8", themeGlowRGB: "138, 180, 248", shadeColor: "#1B3A7A", bulbColor: "#e8f0fe", lightOpacity: "0.15", faceAwake: "1", faceSleep: "0" }, // Soft Blue
+            { themeColor: "#e8eaed", themeGlowRGB: "232, 234, 237", shadeColor: "#1B3A7A", bulbColor: "#ffffff", lightOpacity: "0.15", faceAwake: "1", faceSleep: "0" }, // Silver
+            { themeColor: "#1e293b", themeGlowRGB: "0, 0, 0", shadeColor: "#0f172a", bulbColor: "#020617", lightOpacity: "0", faceAwake: "0", faceSleep: "1" } // Lights Off
+        ];
+
+        let currentThemeIndex = 0;
+        const pullString = document.querySelector('.pull-string-group');
+        const rootStyles = document.documentElement.style;
+
+        function toggleLamp() {
+            pullString.style.transform = 'translateY(15px)';
+            setTimeout(() => { pullString.style.transform = 'translateY(0)'; }, 150);
+
+            currentThemeIndex = (currentThemeIndex + 1) % themes.length;
+            const config = themes[currentThemeIndex];
+
+            rootStyles.setProperty('--theme-color', config.themeColor);
+            rootStyles.setProperty('--theme-glow-rgb', config.themeGlowRGB);
+            rootStyles.setProperty('--shade-color', config.shadeColor);
+            rootStyles.setProperty('--bulb-color', config.bulbColor);
+            rootStyles.setProperty('--light-opacity', config.lightOpacity);
+            rootStyles.setProperty('--face-awake', config.faceAwake);
+            rootStyles.setProperty('--face-sleep', config.faceSleep);
+        }
+    </script>
+    <script src="app.js"></script>
+</body>
+</html>
