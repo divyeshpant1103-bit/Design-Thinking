@@ -9,7 +9,7 @@
     /* ── HERO ── */
     .hero {
       background: var(--surface);
-      border-bottom: 1px solid var(--border);
+      border-bottom: 2px solid var(--gold);
       padding: 80px 24px 72px;
       text-align: center;
       position: relative;
@@ -18,23 +18,24 @@
     .hero::before {
       content: '';
       position: absolute; inset: 0;
-      background: radial-gradient(ellipse 70% 60% at 50% -10%, rgba(45,91,227,0.07), transparent);
+      background: radial-gradient(ellipse 70% 60% at 50% -10%, rgba(27,58,122,0.06), transparent);
     }
     .hero-eyebrow {
       display: inline-flex; align-items: center; gap: 6px;
-      background: var(--accent-light);
-      color: var(--accent);
+      background: var(--gold-light);
+      color: var(--gold-dark);
       font-size: 12px; font-weight: 700;
       letter-spacing: 0.08em; text-transform: uppercase;
       padding: 5px 14px; border-radius: 100px;
       margin-bottom: 20px;
+      border: 1px solid rgba(201,168,76,0.3);
     }
     .hero h1 {
       font-size: clamp(36px, 6vw, 64px);
-      color: var(--text);
+      color: var(--accent);
       max-width: 700px; margin: 0 auto 16px;
     }
-    .hero h1 span { color: var(--accent); }
+    .hero h1 span { color: var(--gold-dark); }
     .hero p {
       font-size: 17px; color: var(--text-muted);
       max-width: 480px; margin: 0 auto 36px;
@@ -58,8 +59,8 @@
       transition: border-color var(--transition), box-shadow var(--transition);
     }
     .hero-search input:focus {
-      border-color: var(--accent);
-      box-shadow: 0 4px 20px rgba(45,91,227,0.12);
+      border-color: var(--gold);
+      box-shadow: 0 4px 20px rgba(201,168,76,0.15);
     }
     .hero-search button {
       position: absolute; right: 6px; top: 50%;
@@ -114,8 +115,8 @@
       display: block;
     }
     .quick-tile:hover {
-      background: white; border-color: var(--accent);
-      box-shadow: 0 4px 16px rgba(45,91,227,0.1);
+      background: white; border-color: var(--gold);
+      box-shadow: 0 4px 16px rgba(201,168,76,0.15);
       transform: translateY(-2px);
     }
     .quick-tile .icon { font-size: 26px; margin-bottom: 8px; }
@@ -142,7 +143,7 @@
     .announce-card:hover { box-shadow: var(--shadow); }
     .announce-dot {
       width: 8px; height: 8px; border-radius: 50%;
-      background: var(--accent); flex-shrink: 0; margin-top: 7px;
+      background: var(--gold); flex-shrink: 0; margin-top: 7px;
     }
     .announce-card h4 { font-size: 15px; margin-bottom: 4px; }
     .announce-card p { font-size: 13px; color: var(--text-muted); line-height: 1.6; }
@@ -160,8 +161,8 @@
 
     .profile-card {
       display: none;
-      background: var(--accent-light);
-      border: 1.5px solid rgba(45,91,227,0.15);
+      background: var(--gold-light);
+      border: 1.5px solid rgba(201,168,76,0.3);
       border-radius: var(--radius);
       padding: 20px;
       margin-top: 20px;
@@ -172,9 +173,10 @@
       width: 52px; height: 52px; border-radius: 50%;
       background: var(--accent);
       display: flex; align-items: center; justify-content: center;
-      color: white; font-size: 20px; font-weight: 700;
+      color: var(--gold); font-size: 20px; font-weight: 700;
       margin-bottom: 12px;
       font-family: 'Syne', sans-serif;
+      border: 2px solid var(--gold);
     }
     .profile-card h3 { font-size: 16px; }
     .profile-card .meta { font-size: 13px; color: var(--text-muted); margin-top: 4px; line-height: 1.6; }
@@ -193,7 +195,7 @@
 
 <!-- NAVBAR -->
 <nav class="navbar">
-  <a href="index.html" class="nav-logo">GEU <span>Nexus</span></a>
+  <a href="index.html" class="nav-logo"><img src="logo.png" alt="GEU Nexus Logo"><div class="nav-logo-text"><span class="name">GEU Nexus</span><span class="sub">Innovation &amp; Excellence</span></div></a>
   <ul class="nav-links" id="navLinks">
     <li><a href="index.html" class="active">Home</a></li>
     <li><a href="lost-found.html">Lost & Found</a></li>
@@ -212,6 +214,7 @@
 
 <!-- HERO -->
 <section class="hero">
+  <img src="logo.png" alt="GEU Nexus" class="fade-up" style="height:110px;width:110px;object-fit:contain;border-radius:50%;border:3px solid var(--gold);box-shadow:0 8px 32px rgba(201,168,76,0.25);margin-bottom:20px;background:white;">
   <div class="hero-eyebrow">🎓 Graphic Era University</div>
   <h1 class="fade-up">Your Campus,<br><span>Connected.</span></h1>
   <p class="fade-up delay-1">Lost something? Need to sell your old books? Looking for a PG nearby? GEU Nexus has it all — built for students, by students.</p>
@@ -331,7 +334,7 @@
 <footer>
   <div class="footer-inner">
     <div class="footer-brand">
-      <div class="logo">GEU <span>Nexus</span></div>
+      <div style="display:flex;align-items:center;gap:10px;margin-bottom:10px;"><img src="logo.png" alt="Logo" style="height:40px;width:40px;object-fit:contain;border-radius:50%;border:2px solid var(--gold);background:white;"><div class="logo" style="margin-bottom:0">GEU <span>Nexus</span></div></div>
       <p>A student-built platform connecting the GEU campus community — for lost items, marketplace, and campus life.</p>
     </div>
     <div class="footer-col">
