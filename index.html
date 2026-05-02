@@ -149,25 +149,7 @@
     .announce-card p { font-size: 13px; color: var(--text-muted); line-height: 1.6; }
     .announce-card .date { font-size: 11px; color: var(--text-light); margin-top: 6px; font-weight: 500; }
 
-    /* Login / Profile */
-    .auth-panel {
-      background: var(--surface);
-      border: 1px solid var(--border);
-      border-radius: var(--radius);
-      padding: 28px;
-    }
-    .auth-panel h2 { font-size: 20px; margin-bottom: 6px; }
-    .auth-panel > p { font-size: 13px; color: var(--text-muted); margin-bottom: 22px; }
 
-    .profile-card {
-      display: none;
-      background: var(--gold-light);
-      border: 1.5px solid rgba(201,168,76,0.3);
-      border-radius: var(--radius);
-      padding: 20px;
-      margin-top: 20px;
-      animation: fadeUp 0.3s ease;
-    }
     .profile-card.show { display: block; }
     .profile-avatar {
       width: 52px; height: 52px; border-radius: 50%;
@@ -205,7 +187,6 @@
     <li><a href="#announcements">Notices</a></li>
   </ul>
   <div class="nav-right">
-    <a href="#login" class="btn btn-outline">Login</a>
     <button class="hamburger" id="hamburger" aria-label="Menu">
       <span></span><span></span><span></span>
     </button>
@@ -294,39 +275,7 @@
     </div>
   </div>
 
-  <!-- LOGIN / PROFILE -->
-  <div id="login">
-    <div class="auth-panel">
-      <h2>Student Login</h2>
-      <p>Access your GEU Nexus account to post listings and connect with peers.</p>
 
-      <div id="loginForm">
-        <div class="form-group">
-          <label>University Email</label>
-          <input type="email" id="loginEmail" placeholder="rollno@geu.ac.in" />
-        </div>
-        <div class="form-group">
-          <label>Password</label>
-          <input type="password" id="loginPass" placeholder="••••••••" />
-        </div>
-        <button class="btn btn-primary" style="width:100%;justify-content:center;padding:12px;" onclick="handleLogin()">Login to GEU Nexus</button>
-        <p style="text-align:center;font-size:13px;color:var(--text-muted);margin-top:12px;">
-          Don't have an account? <a href="#" style="color:var(--accent);font-weight:600;">Register</a>
-        </p>
-      </div>
-
-      <div class="profile-card" id="profileCard">
-        <div class="profile-avatar" id="profileAvatar">A</div>
-        <h3 id="profileName">Arjun Sharma</h3>
-        <div class="meta" id="profileMeta">
-          Roll No: 22BIT0042<br>
-          B.Tech CSE — 4th Semester<br>
-          Hostel: Block C, Room 214
-        </div>
-        <div class="logout" onclick="handleLogout()">↩ Logout</div>
-      </div>
-    </div>
-  </div>
 
 </div>
 
@@ -350,7 +299,6 @@
       <h4>Campus</h4>
       <ul>
         <li><a href="#announcements">Notice Board</a></li>
-        <li><a href="#login">Student Login</a></li>
         <li><a href="#">ERP Portal</a></li>
         <li><a href="#">Library</a></li>
       </ul>
@@ -415,24 +363,7 @@ function doSearch() {
   if (q) showToast(`Searching for "${q}"...`);
 }
 
-function handleLogin() {
-  const email = document.getElementById('loginEmail').value;
-  const pass = document.getElementById('loginPass').value;
-  if (!email || !pass) { showToast('⚠️ Please enter your email and password.'); return; }
-  if (!email.endsWith('@geu.ac.in') && !email.includes('@')) {
-    showToast('⚠️ Please use your GEU email address.'); return;
-  }
-  const name = email.split('@')[0].replace(/[0-9]/g,'').replace(/\b\w/g, c => c.toUpperCase()) || 'Student';
-  document.getElementById('profileName').textContent = name + ' Sharma';
-  document.getElementById('profileAvatar').textContent = name[0].toUpperCase();
-  document.getElementById('loginForm').style.display = 'none';
-  document.getElementById('profileCard').classList.add('show');
-  showToast('Welcome back, ' + name + '! 👋');
-}
 
-function handleLogout() {
-  document.getElementById('loginForm').style.display = '';
-  document.getElementById('profileCard').classList.remove('show');
   document.getElementById('loginEmail').value = '';
   document.getElementById('loginPass').value = '';
   showToast('Logged out successfully.');
