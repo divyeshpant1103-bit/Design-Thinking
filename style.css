@@ -408,3 +408,44 @@ footer {
 .delay-2 { animation-delay: 0.16s; }
 .delay-3 { animation-delay: 0.24s; }
 .delay-4 { animation-delay: 0.32s; }
+/* ==========================================
+   DARK MODE OVERRIDES
+   ========================================== */
+body.dark-theme {
+  /* Replace these with your actual CSS variable names if they are different */
+  --bg: #0F172A;
+  --surface: #1E293B;
+  --surface2: #334155;
+  --text: #F8FAFC;
+  --text-muted: #94A3B8;
+  --border: #334155;
+  --text-light: #64748B;
+}
+
+/* Ensure inputs and modals look good in dark mode */
+body.dark-theme input,
+body.dark-theme select,
+body.dark-theme textarea,
+body.dark-theme .modal {
+  background-color: var(--surface);
+  color: var(--text);
+  border-color: var(--border);
+  color-scheme: dark; /* Makes the default scrollbars and calendars dark! */
+}
+
+/* Theme Toggle Button Styling */
+.theme-toggle {
+  background: none;
+  border: none;
+  font-size: 20px;
+  cursor: pointer;
+  padding: 8px;
+  border-radius: 50%;
+  transition: background 0.3s ease;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+.theme-toggle:hover {
+  background: var(--surface2);
+}

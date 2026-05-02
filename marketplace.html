@@ -20,12 +20,18 @@
       color: var(--text); margin: 6px 0 4px;
     }
     .price-tag.free { color: var(--success); }
+    
+    /* New Feature Badges */
+    .badge-trade { background: #FCE7F3; color: #BE185D; }
+    .badge-bundle { background: #E0E7FF; color: #4338CA; }
+    .badge-request { background: #FEE2E2; color: #DC2626; border: 1px solid #FCA5A5; }
+    .trade-note { font-size: 12px; font-weight: 600; color: #BE185D; margin-bottom: 8px; background: #FDF2F8; padding: 4px 8px; border-radius: 4px; display: inline-block;}
   </style>
 </head>
 <body>
 
 <nav class="navbar">
-  <a href="index.html" class="nav-logo"><img src="logo.png" alt="GEU Nexus Logo"><div class="nav-logo-text"><span class="name">GEU Nexus</span><span class="sub">Innovation &amp; Excellence</span></div></a>
+  <a href="index.html" class="nav-logo"><img src="logo.png" alt="GEU Nexus Logo"><div class="nav-logo-text"><span class="name">GEU Nexus</span><span class="sub">Innovation & Excellence</span></div></a>
   <ul class="nav-links" id="navLinks">
     <li><a href="index.html">Home</a></li>
     <li><a href="lost-found.html">Lost & Found</a></li>
@@ -34,8 +40,10 @@
     <li><a href="pgs.html">PGs</a></li>
     <li><a href="index.html#announcements">Notices</a></li>
   </ul>
-  <div class="nav-right">
-    <a href="index.html#login" class="btn btn-outline">Login</a>
+ <div class="nav-right" style="display: flex; align-items: center; gap: 8px;">
+    <button id="themeToggle" class="theme-toggle" onclick="toggleTheme()" title="Toggle Dark Mode">🌙</button>
+    
+    <a href="login.html" class="btn btn-outline">Logout</a>
     <button class="hamburger" id="hamburger"><span></span><span></span><span></span></button>
   </div>
 </nav>
@@ -43,9 +51,12 @@
 <div class="page-header">
   <div>
     <h1>🛒 Campus Marketplace</h1>
-    <p>Buy, sell, or donate items with your fellow GEU students.</p>
+    <p>Buy, sell, trade, or request items with your fellow GEU students.</p>
   </div>
-  <button class="btn btn-primary" onclick="openModal('postModal')">+ Post a Listing</button>
+  <div style="display: flex; gap: 10px;">
+    <button class="btn btn-outline" onclick="openModal('requestModal')">🎯 Post a Request</button>
+    <button class="btn btn-primary" onclick="openModal('postModal')">+ Post a Listing</button>
+  </div>
 </div>
 
 <div class="page-wrap">
@@ -55,6 +66,13 @@
       <label><input type="radio" name="type" class="filter-radio" value="all" checked> All</label>
       <label><input type="radio" name="type" class="filter-radio" value="sell"> For Sale</label>
       <label><input type="radio" name="type" class="filter-radio" value="donate"> Free / Donate</label>
+      <label><input type="radio" name="type" class="filter-radio" value="request"> 🎯 Wishlist (Requests)</label>
+    </div>
+    <hr class="sidebar-divider">
+    <div class="filter-group">
+      <h3>Special Features</h3>
+      <label><input type="checkbox" class="filter-cb" value="trade"> 🤝 Open to Trade</label>
+      <label><input type="checkbox" class="filter-cb" value="bundle"> 📦 Bundle Deals</label>
     </div>
     <hr class="sidebar-divider">
     <div class="filter-group">
@@ -62,22 +80,46 @@
       <label><input type="checkbox" class="filter-cb" value="books"> Books</label>
       <label><input type="checkbox" class="filter-cb" value="electronics"> Electronics</label>
       <label><input type="checkbox" class="filter-cb" value="furniture"> Furniture</label>
-      <label><input type="checkbox" class="filter-cb" value="clothes"> Clothes</label>
-      <label><input type="checkbox" class="filter-cb" value="stationery"> Stationery</label>
       <label><input type="checkbox" class="filter-cb" value="other"> Other</label>
-    </div>
-    <hr class="sidebar-divider">
-    <div class="filter-group">
-      <h3>Price Range</h3>
-      <label><input type="radio" name="price" class="filter-radio" value="all" checked> Any Price</label>
-      <label><input type="radio" name="price" class="filter-radio" value="donate"> Free Only</label>
-      <label><input type="radio" name="price" class="filter-radio" value="sell"> Paid Only</label>
     </div>
   </aside>
 
   <main class="main-content">
-    <p class="section-title" style="margin-bottom:16px;">7 active listings</p>
-    <div class="card-grid">
+    <div class="card-grid" id="marketGrid">
+
+      <div class="card filterable-card" data-tags="sell,bundle,furniture" style="border: 2px solid #E0E7FF;">
+        <div class="listing-img">📦</div>
+        <span class="badge badge-bundle" style="margin-bottom:6px;">Bundle Deal</span>
+        <h3 style="font-size:15px;">Hostel Starter Pack (4 Items)</h3>
+        <div class="price-tag">₹ 950 <span style="font-size: 12px; font-weight: normal; color: var(--text-muted); text-decoration: line-through;">₹ 1400</span></div>
+        <p style="font-size:13px;color:var(--text-muted);margin-bottom:10px;">Moving out! Includes: Bucket & Mug, Mattress, Study Lamp, and Extension Board. Must take all.</p>
+        <p style="font-size:12px;color:var(--text-light);">👤 Senior '26 · Boys Hostel B</p>
+        <button class="btn btn-primary" style="width:100%;justify-content:center;margin-top:12px;font-size:13px; background: #4338CA;" onclick="openMeetup('Senior 26', 'Hostel Starter Pack')">Buy & Coordinate Meetup</button>
+      </div>
+
+      <div class="card filterable-card" data-tags="sell,trade,electronics">
+        <div class="listing-img">🖩</div>
+        <div style="display: flex; gap: 6px;">
+            <span class="badge badge-sell" style="margin-bottom:6px;">For Sale</span>
+            <span class="badge badge-trade" style="margin-bottom:6px;">🤝 Trade Available</span>
+        </div>
+        <h3 style="font-size:15px;">Scientific Calculator (Casio 991EX)</h3>
+        <div class="price-tag">₹ 400</div>
+        <div class="trade-note">🔄 Will trade for 2 hours of C++ Tutoring!</div>
+        <p style="font-size:13px;color:var(--text-muted);margin-bottom:10px;">Works perfectly, used for one semester.</p>
+        <p style="font-size:12px;color:var(--text-light);">👤 Rahul M. · 1st Year CSE</p>
+        <button class="btn btn-primary" style="width:100%;justify-content:center;margin-top:12px;font-size:13px;" onclick="openMeetup('Rahul M.', 'Calculator')">Coordinate Meetup / Trade</button>
+      </div>
+
+      <div class="card filterable-card" data-tags="request,stationery" style="background: #FEF2F2; border-color: #FCA5A5;">
+        <div class="listing-img" style="background: #FEE2E2;">📐</div>
+        <span class="badge badge-request" style="margin-bottom:6px;">🎯 Urgent Request</span>
+        <h3 style="font-size:15px;">Engineering Drafter Needed!</h3>
+        <div class="price-tag" style="color: #DC2626; font-size: 14px;">Willing to pay: ~₹200</div>
+        <p style="font-size:13px;color:#991B1B;margin-bottom:10px;">I lost mine and have an Engineering Drawing exam tomorrow morning! Please help!</p>
+        <p style="font-size:12px;color:var(--text-light);">👤 Aman K. · 1st Year Civil</p>
+        <button class="btn btn-outline" style="width:100%;justify-content:center;margin-top:12px;font-size:13px; border-color: #DC2626; color: #DC2626;" onclick="showToast('Message sent to Aman!')">I have this! Message Aman</button>
+      </div>
 
       <div class="card filterable-card" data-tags="sell,books">
         <div class="listing-img">📘</div>
@@ -86,118 +128,85 @@
         <div class="price-tag">₹ 180</div>
         <p style="font-size:13px;color:var(--text-muted);margin-bottom:10px;">RD Sharma set, minor highlighting only. Perfect for 1st year B.Tech.</p>
         <p style="font-size:12px;color:var(--text-light);">👤 Ananya K. · 2nd Year CSE</p>
-        <button class="btn btn-primary" style="width:100%;justify-content:center;margin-top:12px;font-size:13px;" onclick="showToast('Seller contact: 9812300011')">Contact Seller</button>
-      </div>
-
-      <div class="card filterable-card" data-tags="donate,furniture">
-        <div class="listing-img">🪑</div>
-        <span class="badge badge-donate" style="margin-bottom:6px;">Free Donation</span>
-        <h3 style="font-size:15px;">Study Chair (Foldable)</h3>
-        <div class="price-tag free">Free</div>
-        <p style="font-size:13px;color:var(--text-muted);margin-bottom:10px;">Lightweight foldable chair, good condition. Vacating hostel, need it gone ASAP.</p>
-        <p style="font-size:12px;color:var(--text-light);">👤 Rohan D. · 4th Year ECE</p>
-        <button class="btn btn-primary" style="width:100%;justify-content:center;margin-top:12px;font-size:13px;" onclick="showToast('Contact: 9988001122')">Claim Item</button>
-      </div>
-
-      <div class="card filterable-card" data-tags="sell,electronics">
-        <div class="listing-img">💻</div>
-        <span class="badge badge-sell" style="margin-bottom:6px;">For Sale</span>
-        <h3 style="font-size:15px;">HP Laptop Cooling Pad</h3>
-        <div class="price-tag">₹ 450</div>
-        <p style="font-size:13px;color:var(--text-muted);margin-bottom:10px;">Dual fan cooling pad. Works perfectly. Selling because upgraded to a new stand.</p>
-        <p style="font-size:12px;color:var(--text-light);">👤 Vikram S. · 3rd Year IT</p>
-        <button class="btn btn-primary" style="width:100%;justify-content:center;margin-top:12px;font-size:13px;" onclick="showToast('Contact: 8800112233')">Contact Seller</button>
-      </div>
-
-      <div class="card filterable-card" data-tags="sell,stationery">
-        <div class="listing-img">📐</div>
-        <span class="badge badge-sell" style="margin-bottom:6px;">For Sale</span>
-        <h3 style="font-size:15px;">Drafting Kit (Full Set)</h3>
-        <div class="price-tag">₹ 280</div>
-        <p style="font-size:13px;color:var(--text-muted);margin-bottom:10px;">Complete Engineering Drawing kit — compass, set square, drafter. Used for 1 sem.</p>
-        <p style="font-size:12px;color:var(--text-light);">👤 Pooja N. · 2nd Year Civil</p>
-        <button class="btn btn-primary" style="width:100%;justify-content:center;margin-top:12px;font-size:13px;" onclick="showToast('Contact: 7700554433')">Contact Seller</button>
-      </div>
-
-      <div class="card filterable-card" data-tags="donate,books">
-        <div class="listing-img">📚</div>
-        <span class="badge badge-donate" style="margin-bottom:6px;">Free Donation</span>
-        <h3 style="font-size:15px;">Physics & Chemistry Notes</h3>
-        <div class="price-tag free">Free</div>
-        <p style="font-size:13px;color:var(--text-muted);margin-bottom:10px;">Handwritten notes for 1st year B.Tech Physics and Chemistry. Well organized.</p>
-        <p style="font-size:12px;color:var(--text-light);">👤 Ishita R. · 2nd Year CSE</p>
-        <button class="btn btn-primary" style="width:100%;justify-content:center;margin-top:12px;font-size:13px;" onclick="showToast('Contact: 9911002233')">Claim Notes</button>
-      </div>
-
-      <div class="card filterable-card" data-tags="sell,electronics">
-        <div class="listing-img">🖱️</div>
-        <span class="badge badge-sell" style="margin-bottom:6px;">For Sale</span>
-        <h3 style="font-size:15px;">Logitech Wireless Mouse</h3>
-        <div class="price-tag">₹ 350</div>
-        <p style="font-size:13px;color:var(--text-muted);margin-bottom:10px;">M185 model, barely used. Comes with USB receiver. Battery life excellent.</p>
-        <p style="font-size:12px;color:var(--text-light);">👤 Nikhil B. · 3rd Year CSE</p>
-        <button class="btn btn-primary" style="width:100%;justify-content:center;margin-top:12px;font-size:13px;" onclick="showToast('Contact: 9876001234')">Contact Seller</button>
-      </div>
-
-      <div class="card filterable-card" data-tags="donate,clothes">
-        <div class="listing-img">👕</div>
-        <span class="badge badge-donate" style="margin-bottom:6px;">Free Donation</span>
-        <h3 style="font-size:15px;">GEU Fest T-Shirts (3 pcs)</h3>
-        <div class="price-tag free">Free</div>
-        <p style="font-size:13px;color:var(--text-muted);margin-bottom:10px;">3 GEU cultural fest T-shirts, sizes M & L. Clean and washed. Take all three.</p>
-        <p style="font-size:12px;color:var(--text-light);">👤 Tanya V. · Alumna 2025</p>
-        <button class="btn btn-primary" style="width:100%;justify-content:center;margin-top:12px;font-size:13px;" onclick="showToast('Contact: 9800333221')">Claim Items</button>
+        <button class="btn btn-primary" style="width:100%;justify-content:center;margin-top:12px;font-size:13px;" onclick="openMeetup('Ananya K.', 'Math Books')">Buy & Coordinate Meetup</button>
       </div>
 
     </div>
   </main>
 </div>
 
-<!-- POST MODAL -->
+<div class="modal-overlay" id="meetupModal">
+  <div class="modal">
+    <h2 style="margin-bottom: 5px;">📍 Coordinate Meetup</h2>
+    <p style="font-size: 13px; color: var(--text-muted); margin-bottom: 20px;">Schedule a safe on-campus handover with <b id="meetupSellerName">Seller</b>.</p>
+    
+    <div class="form-group">
+      <label>Select Safe Campus Zone *</label>
+      <select id="meetupLocation">
+        <option>🏛️ Central Library (Main Steps)</option>
+        <option>💻 CS Block (Ground Floor Lobby)</option>
+        <option>☕ Main Cafeteria (Entry Gate)</option>
+        <option>🌳 Central Lawn (Near Fountain)</option>
+      </select>
+    </div>
+    
+    <div class="form-row">
+      <div class="form-group">
+        <label>Date *</label>
+        <input type="date" id="meetupDate" />
+      </div>
+      <div class="form-group">
+        <label>Time *</label>
+        <input type="time" id="meetupTime" />
+      </div>
+    </div>
+    
+    <div class="form-group">
+      <label>Message to Seller (Optional)</label>
+      <textarea placeholder="e.g., I'll be wearing a red jacket..."></textarea>
+    </div>
+
+    <div class="modal-actions">
+      <button class="btn btn-ghost" onclick="closeModal('meetupModal')">Cancel</button>
+      <button class="btn btn-primary" onclick="sendMeetupInvite()">Send Invite</button>
+    </div>
+  </div>
+</div>
+
 <div class="modal-overlay" id="postModal">
   <div class="modal">
     <h2>Post a Listing</h2>
     <div class="form-row">
       <div class="form-group">
         <label>Item Title *</label>
-        <input type="text" placeholder="e.g. Physics Textbook" />
+        <input type="text" id="postTitle" placeholder="e.g. Drafter, Physics Book..." />
       </div>
       <div class="form-group">
         <label>Type *</label>
         <select>
           <option>For Sale</option>
           <option>Free / Donate</option>
+          <option>Bundle Deal</option>
         </select>
       </div>
     </div>
+    <div class="form-group" style="display: flex; align-items: center; gap: 8px; margin-bottom: 16px; background: #FDF2F8; padding: 10px; border-radius: 8px; border: 1px dashed #FBCFE8;">
+        <input type="checkbox" id="acceptTrade" style="width: 16px; height: 16px; accent-color: #BE185D;">
+        <label for="acceptTrade" style="margin: 0; color: #BE185D;">🤝 I am open to trading this item instead of cash.</label>
+    </div>
     <div class="form-row">
       <div class="form-group">
-        <label>Category</label>
-        <select>
-          <option>Books</option>
-          <option>Electronics</option>
-          <option>Furniture</option>
-          <option>Clothes</option>
-          <option>Stationery</option>
-          <option>Other</option>
-        </select>
-      </div>
-      <div class="form-group">
-        <label>Price (₹) — leave blank if free</label>
-        <input type="number" placeholder="e.g. 200" />
+        <label>Price (₹)</label>
+        <input type="number" placeholder="Leave blank if free" />
       </div>
     </div>
     <div class="form-group">
       <label>Description *</label>
-      <textarea placeholder="Describe condition, usage, why selling..."></textarea>
-    </div>
-    <div class="form-group">
-      <label>Your Contact</label>
-      <input type="text" placeholder="Phone or email" />
+      <textarea placeholder="Describe condition, usage, or what you want to trade for..."></textarea>
     </div>
     <div class="modal-actions">
       <button class="btn btn-ghost" onclick="closeModal('postModal')">Cancel</button>
-      <button class="btn btn-primary" onclick="submitListing()">Post Listing</button>
+      <button class="btn btn-primary" onclick="submitSmartListing()">Post Listing</button>
     </div>
   </div>
 </div>
@@ -205,26 +214,55 @@
 <footer>
   <div class="footer-inner">
     <div class="footer-brand"><div style="display:flex;align-items:center;gap:10px;margin-bottom:10px;"><img src="logo.png" alt="Logo" style="height:40px;width:40px;object-fit:contain;border-radius:50%;border:2px solid var(--gold);background:white;"><div class="logo" style="margin-bottom:0">GEU <span>Nexus</span></div></div><p>Campus marketplace for GEU students.</p></div>
-    <div class="footer-col"><h4>Features</h4><ul>
-      <li><a href="lost-found.html">Lost & Found</a></li>
-      <li><a href="marketplace.html">Marketplace</a></li>
-      <li><a href="cafes.html">Cafes</a></li>
-      <li><a href="pgs.html">PGs</a></li>
-    </ul></div>
-    <div class="footer-col"><h4>Campus</h4><ul><li><a href="index.html#announcements">Notices</a></li><li><a href="index.html#login">Login</a></li></ul></div>
-    <div class="footer-col"><h4>Contact</h4><ul><li><a href="#">About</a></li><li><a href="#">Feedback</a></li></ul></div>
-  </div>
-  <div class="footer-bottom">
-    <span>© 2026 GEU Nexus. Built with ❤️ by GEU students.</span>
-    <span>Graphic Era University, Dehradun</span>
+    <div class="footer-col"><h4>Features</h4><ul><li><a href="lost-found.html">Lost & Found</a></li><li><a href="marketplace.html">Marketplace</a></li></ul></div>
   </div>
 </footer>
 
 <script src="app.js"></script>
 <script>
-function submitListing() {
-  closeModal('postModal');
-  showToast('Listing posted successfully! 🎉 It\'s now live on the marketplace.');
+// ==========================================
+// NEW FEATURE LOGIC (Reverse Match & Meetup)
+// ==========================================
+
+// 1. FEATURE 4: Reverse Marketplace / Smart Match Logic
+function submitSmartListing() {
+    const titleInput = document.getElementById('postTitle');
+    const title = titleInput.value.toLowerCase();
+
+    // Check if they are trying to sell a Drafter
+    if (title.includes('drafter')) {
+        // SMART MATCH INTERCEPTION
+        const wantToMessage = confirm("🚨 SMART MATCH: Wait! Aman from 1st Year just posted an urgent request looking for a Drafter.\n\nWould you like to message him directly instead of posting a new listing?");
+        
+        if (wantToMessage) {
+            closeModal('postModal');
+            showToast("Redirecting to chat with Aman K...");
+            titleInput.value = ''; // clear input
+            return; // Stop the post
+        }
+    }
+
+    // Normal Post Logic
+    closeModal('postModal');
+    showToast("Listing posted successfully! 🎉");
+    titleInput.value = '';
+}
+
+// 2. FEATURE 5: Campus Meetup Scheduler Logic
+function openMeetup(sellerName, itemName) {
+    document.getElementById('meetupSellerName').innerText = sellerName;
+    
+    // Auto-fill today's date to make the demo smoother
+    document.getElementById('meetupDate').valueAsDate = new Date();
+    document.getElementById('meetupTime').value = "16:00"; 
+    
+    openModal('meetupModal');
+}
+
+function sendMeetupInvite() {
+    const loc = document.getElementById('meetupLocation').value;
+    closeModal('meetupModal');
+    alert(`✅ Secure Invite Sent!\n\nYou requested to meet at ${loc}. We will notify you once the seller confirms the time!`);
 }
 </script>
 </body>
