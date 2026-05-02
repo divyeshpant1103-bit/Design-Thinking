@@ -1,0 +1,192 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Nearby Cafes — GEU Nexus</title>
+  <link rel="stylesheet" href="style.css" />
+  <style>
+    .cafe-img {
+      width: 100%; height: 120px;
+      background: var(--surface2);
+      border-radius: var(--radius-sm);
+      display: flex; align-items: center; justify-content: center;
+      font-size: 44px; margin-bottom: 14px;
+      border: 1px solid var(--border);
+    }
+    .cafe-meta { display: flex; gap: 12px; flex-wrap: wrap; font-size: 12px; color: var(--text-muted); margin: 8px 0 12px; }
+    .cafe-meta span { display: flex; align-items: center; gap: 3px; }
+    .tag-pill {
+      display: inline-block;
+      background: var(--surface2); color: var(--text-muted);
+      font-size: 11px; font-weight: 600; padding: 3px 9px;
+      border-radius: 100px; margin: 2px 2px 0 0;
+    }
+  </style>
+</head>
+<body>
+
+<nav class="navbar">
+  <a href="index.html" class="nav-logo">GEU <span>Nexus</span></a>
+  <ul class="nav-links" id="navLinks">
+    <li><a href="index.html">Home</a></li>
+    <li><a href="lost-found.html">Lost & Found</a></li>
+    <li><a href="marketplace.html">Buy/Sell/Donate</a></li>
+    <li><a href="cafes.html" class="active">Cafes</a></li>
+    <li><a href="pgs.html">PGs</a></li>
+    <li><a href="index.html#announcements">Notices</a></li>
+  </ul>
+  <div class="nav-right">
+    <a href="index.html#login" class="btn btn-outline">Login</a>
+    <button class="hamburger" id="hamburger"><span></span><span></span><span></span></button>
+  </div>
+</nav>
+
+<div class="page-header">
+  <div>
+    <h1>☕ Nearby Cafes</h1>
+    <p>Best food spots and cafes around Graphic Era University campus.</p>
+  </div>
+  <span style="font-size:13px;color:var(--text-muted);align-self:flex-end;">📍 Dehradun, Uttarakhand</span>
+</div>
+
+<div class="page-wrap">
+  <aside class="sidebar">
+    <div class="filter-group">
+      <h3>Distance</h3>
+      <label><input type="radio" name="dist" class="filter-radio" value="all" checked> All</label>
+      <label><input type="radio" name="dist" class="filter-radio" value="walking"> Walking (on campus)</label>
+      <label><input type="radio" name="dist" class="filter-radio" value="near"> &lt; 500m</label>
+      <label><input type="radio" name="dist" class="filter-radio" value="far"> &lt; 2km</label>
+    </div>
+    <hr class="sidebar-divider">
+    <div class="filter-group">
+      <h3>Cuisine</h3>
+      <label><input type="checkbox" class="filter-cb" value="north-indian"> North Indian</label>
+      <label><input type="checkbox" class="filter-cb" value="south-indian"> South Indian</label>
+      <label><input type="checkbox" class="filter-cb" value="chinese"> Chinese</label>
+      <label><input type="checkbox" class="filter-cb" value="fast-food"> Fast Food</label>
+      <label><input type="checkbox" class="filter-cb" value="cafe"> Cafe / Snacks</label>
+    </div>
+    <hr class="sidebar-divider">
+    <div class="filter-group">
+      <h3>Rating</h3>
+      <label><input type="radio" name="rating" class="filter-radio" value="all" checked> Any Rating</label>
+      <label><input type="radio" name="rating" class="filter-radio" value="top"> ⭐ 4.5+</label>
+      <label><input type="radio" name="rating" class="filter-radio" value="good"> ⭐ 4.0+</label>
+    </div>
+  </aside>
+
+  <main class="main-content">
+    <p class="section-title" style="margin-bottom:16px;">6 cafes listed</p>
+    <div class="card-grid">
+
+      <div class="card filterable-card" data-tags="walking,cafe,north-indian,top,good">
+        <div class="cafe-img">🍕</div>
+        <h3 style="font-size:16px;">The GEU Grind</h3>
+        <div class="stars">★★★★★</div>
+        <div class="cafe-meta">
+          <span>📍 Inside Campus</span>
+          <span>🕐 7 AM – 10 PM</span>
+          <span>💰 ₹50–150</span>
+        </div>
+        <p style="font-size:13px;color:var(--text-muted);margin-bottom:10px;">The go-to campus cafe for quick bites between classes. Famous for masala maggi and cold coffee.</p>
+        <div><span class="tag-pill">Cafe</span><span class="tag-pill">Snacks</span><span class="tag-pill">Coffee</span></div>
+        <a href="https://maps.google.com" target="_blank" class="btn btn-outline" style="width:100%;justify-content:center;margin-top:14px;font-size:13px;">View on Map 📍</a>
+      </div>
+
+      <div class="card filterable-card" data-tags="near,north-indian,fast-food,good">
+        <div class="cafe-img">🍛</div>
+        <h3 style="font-size:16px;">Campus Bites</h3>
+        <div class="stars">★★★★☆</div>
+        <div class="cafe-meta">
+          <span>📍 50m from Main Gate</span>
+          <span>🕐 8 AM – 9 PM</span>
+          <span>💰 ₹60–200</span>
+        </div>
+        <p style="font-size:13px;color:var(--text-muted);margin-bottom:10px;">Affordable thalis and North Indian meals. Students love the dal-chawal combo for just ₹70.</p>
+        <div><span class="tag-pill">Thali</span><span class="tag-pill">North Indian</span><span class="tag-pill">Budget</span></div>
+        <a href="https://maps.google.com" target="_blank" class="btn btn-outline" style="width:100%;justify-content:center;margin-top:14px;font-size:13px;">View on Map 📍</a>
+      </div>
+
+      <div class="card filterable-card" data-tags="near,south-indian,top,good">
+        <div class="cafe-img">🥞</div>
+        <h3 style="font-size:16px;">Dosa Corner Express</h3>
+        <div class="stars">★★★★★</div>
+        <div class="cafe-meta">
+          <span>📍 200m from Back Gate</span>
+          <span>🕐 7:30 AM – 3 PM</span>
+          <span>💰 ₹40–120</span>
+        </div>
+        <p style="font-size:13px;color:var(--text-muted);margin-bottom:10px;">Crispy dosas and idlis fresh every morning. Best breakfast spot near campus, always busy!</p>
+        <div><span class="tag-pill">South Indian</span><span class="tag-pill">Breakfast</span><span class="tag-pill">Veg</span></div>
+        <a href="https://maps.google.com" target="_blank" class="btn btn-outline" style="width:100%;justify-content:center;margin-top:14px;font-size:13px;">View on Map 📍</a>
+      </div>
+
+      <div class="card filterable-card" data-tags="far,chinese,fast-food,good">
+        <div class="cafe-img">🍜</div>
+        <h3 style="font-size:16px;">Wok & Roll</h3>
+        <div class="stars">★★★★☆</div>
+        <div class="cafe-meta">
+          <span>📍 1.2km — Rajpur Road</span>
+          <span>🕐 11 AM – 11 PM</span>
+          <span>💰 ₹100–300</span>
+        </div>
+        <p style="font-size:13px;color:var(--text-muted);margin-bottom:10px;">Indo-Chinese favourites — momos, chowmein and fried rice. Perfect for evening hangouts.</p>
+        <div><span class="tag-pill">Chinese</span><span class="tag-pill">Momos</span><span class="tag-pill">Evening</span></div>
+        <a href="https://maps.google.com" target="_blank" class="btn btn-outline" style="width:100%;justify-content:center;margin-top:14px;font-size:13px;">View on Map 📍</a>
+      </div>
+
+      <div class="card filterable-card" data-tags="near,cafe,fast-food,top,good">
+        <div class="cafe-img">🧋</div>
+        <h3 style="font-size:16px;">Brewnary Cafe</h3>
+        <div class="stars">★★★★★</div>
+        <div class="cafe-meta">
+          <span>📍 300m — Clement Town</span>
+          <span>🕐 9 AM – 10 PM</span>
+          <span>💰 ₹80–250</span>
+        </div>
+        <p style="font-size:13px;color:var(--text-muted);margin-bottom:10px;">Trendy cafe with great ambience and fast WiFi. Best place for group projects and assignments.</p>
+        <div><span class="tag-pill">Cafe</span><span class="tag-pill">WiFi</span><span class="tag-pill">Work-friendly</span></div>
+        <a href="https://maps.google.com" target="_blank" class="btn btn-outline" style="width:100%;justify-content:center;margin-top:14px;font-size:13px;">View on Map 📍</a>
+      </div>
+
+      <div class="card filterable-card" data-tags="far,north-indian,top,good">
+        <div class="cafe-img">🍱</div>
+        <h3 style="font-size:16px;">Annapurna Dhaba</h3>
+        <div class="stars">★★★★☆</div>
+        <div class="cafe-meta">
+          <span>📍 1.8km — GMS Road</span>
+          <span>🕐 7 AM – 11 PM</span>
+          <span>💰 ₹50–180</span>
+        </div>
+        <p style="font-size:13px;color:var(--text-muted);margin-bottom:10px;">Classic dhaba style food with generous portions. The chole bhature here are legendary among seniors.</p>
+        <div><span class="tag-pill">Dhaba</span><span class="tag-pill">North Indian</span><span class="tag-pill">Filling</span></div>
+        <a href="https://maps.google.com" target="_blank" class="btn btn-outline" style="width:100%;justify-content:center;margin-top:14px;font-size:13px;">View on Map 📍</a>
+      </div>
+
+    </div>
+  </main>
+</div>
+
+<footer>
+  <div class="footer-inner">
+    <div class="footer-brand"><div class="logo">GEU <span>Nexus</span></div><p>Discover the best food spots near GEU campus.</p></div>
+    <div class="footer-col"><h4>Features</h4><ul>
+      <li><a href="lost-found.html">Lost & Found</a></li>
+      <li><a href="marketplace.html">Marketplace</a></li>
+      <li><a href="cafes.html">Cafes</a></li>
+      <li><a href="pgs.html">PGs</a></li>
+    </ul></div>
+    <div class="footer-col"><h4>Campus</h4><ul><li><a href="index.html#announcements">Notices</a></li><li><a href="index.html#login">Login</a></li></ul></div>
+    <div class="footer-col"><h4>Contact</h4><ul><li><a href="#">About</a></li><li><a href="#">Feedback</a></li></ul></div>
+  </div>
+  <div class="footer-bottom">
+    <span>© 2026 GEU Nexus. Built with ❤️ by GEU students.</span>
+    <span>Graphic Era University, Dehradun</span>
+  </div>
+</footer>
+
+<script src="app.js"></script>
+</body>
+</html>

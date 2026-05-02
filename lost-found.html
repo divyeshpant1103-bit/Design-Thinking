@@ -1,0 +1,295 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Lost & Found — GEU Nexus</title>
+  <link rel="stylesheet" href="style.css" />
+</head>
+<body>
+
+<nav class="navbar">
+  <a href="index.html" class="nav-logo">GEU <span>Nexus</span></a>
+  <ul class="nav-links" id="navLinks">
+    <li><a href="index.html">Home</a></li>
+    <li><a href="lost-found.html" class="active">Lost & Found</a></li>
+    <li><a href="marketplace.html">Buy/Sell/Donate</a></li>
+    <li><a href="cafes.html">Cafes</a></li>
+    <li><a href="pgs.html">PGs</a></li>
+    <li><a href="index.html#announcements">Notices</a></li>
+  </ul>
+  <div class="nav-right">
+    <a href="index.html#login" class="btn btn-outline">Login</a>
+    <button class="hamburger" id="hamburger"><span></span><span></span><span></span></button>
+  </div>
+</nav>
+
+<div class="page-header">
+  <div>
+    <h1>🔍 Lost & Found</h1>
+    <p>Report missing items or help others recover their belongings on campus.</p>
+  </div>
+  <button class="btn btn-primary" onclick="openModal('reportModal')">+ Report an Item</button>
+</div>
+
+<div class="page-wrap">
+  <!-- SIDEBAR -->
+  <aside class="sidebar">
+    <div class="filter-group">
+      <h3>Status</h3>
+      <label><input type="radio" name="status" class="filter-radio" value="all" checked> All Items</label>
+      <label><input type="radio" name="status" class="filter-radio" value="lost"> Lost Only</label>
+      <label><input type="radio" name="status" class="filter-radio" value="found"> Found Only</label>
+    </div>
+    <hr class="sidebar-divider">
+    <div class="filter-group">
+      <h3>Category</h3>
+      <label><input type="checkbox" class="filter-cb" value="electronics"> Electronics</label>
+      <label><input type="checkbox" class="filter-cb" value="id-card"> ID / Cards</label>
+      <label><input type="checkbox" class="filter-cb" value="clothing"> Clothing</label>
+      <label><input type="checkbox" class="filter-cb" value="books"> Books</label>
+      <label><input type="checkbox" class="filter-cb" value="accessories"> Accessories</label>
+      <label><input type="checkbox" class="filter-cb" value="other"> Other</label>
+    </div>
+    <hr class="sidebar-divider">
+    <div class="filter-group">
+      <h3>Location</h3>
+      <label><input type="checkbox" class="filter-cb" value="library"> Library</label>
+      <label><input type="checkbox" class="filter-cb" value="cafeteria"> Cafeteria</label>
+      <label><input type="checkbox" class="filter-cb" value="hostel"> Hostel</label>
+      <label><input type="checkbox" class="filter-cb" value="lab"> Labs / Classrooms</label>
+      <label><input type="checkbox" class="filter-cb" value="ground"> Sports Ground</label>
+    </div>
+  </aside>
+
+  <!-- MAIN CONTENT -->
+  <main class="main-content">
+    <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:20px;">
+      <p class="section-title">8 items listed</p>
+      <select onchange="sortCards(this.value)" style="font-size:13px;padding:6px 10px;border:1px solid var(--border);border-radius:var(--radius-sm);background:var(--surface);color:var(--text);font-family:'DM Sans',sans-serif;">
+        <option value="newest">Newest First</option>
+        <option value="oldest">Oldest First</option>
+      </select>
+    </div>
+
+    <div class="card-grid" id="itemGrid">
+
+      <div class="card filterable-card" data-tags="lost,electronics,library">
+        <div style="display:flex;justify-content:space-between;align-items:flex-start;margin-bottom:12px;">
+          <div style="font-size:32px;">🎧</div>
+          <span class="badge badge-lost">Lost</span>
+        </div>
+        <h3 style="font-size:16px;margin-bottom:4px;">Samsung Galaxy Buds Pro</h3>
+        <p style="font-size:13px;color:var(--text-muted);margin-bottom:12px;">Black wireless earbuds in white case. Lost while studying in the reading hall.</p>
+        <div style="font-size:12px;color:var(--text-light);display:flex;flex-direction:column;gap:4px;">
+          <span>📍 Library — Reading Hall, 2nd Floor</span>
+          <span>📅 Apr 30, 2026</span>
+          <span>📞 Riya S. · 9876543210</span>
+        </div>
+        <button class="btn btn-outline" style="width:100%;justify-content:center;margin-top:14px;font-size:13px;" onclick="showToast('Contact info copied!')">Contact Owner</button>
+      </div>
+
+      <div class="card filterable-card" data-tags="found,id-card,cafeteria">
+        <div style="display:flex;justify-content:space-between;align-items:flex-start;margin-bottom:12px;">
+          <div style="font-size:32px;">🪪</div>
+          <span class="badge badge-found">Found</span>
+        </div>
+        <h3 style="font-size:16px;margin-bottom:4px;">Student ID Card</h3>
+        <p style="font-size:13px;color:var(--text-muted);margin-bottom:12px;">Found a GEU student ID card near the cafeteria counter. Name visible on card.</p>
+        <div style="font-size:12px;color:var(--text-light);display:flex;flex-direction:column;gap:4px;">
+          <span>📍 Cafeteria — Main Block</span>
+          <span>📅 May 1, 2026</span>
+          <span>📞 Aman V. · 9812345678</span>
+        </div>
+        <button class="btn btn-outline" style="width:100%;justify-content:center;margin-top:14px;font-size:13px;" onclick="showToast('Contact info copied!')">Contact Finder</button>
+      </div>
+
+      <div class="card filterable-card" data-tags="lost,electronics,lab">
+        <div style="display:flex;justify-content:space-between;align-items:flex-start;margin-bottom:12px;">
+          <div style="font-size:32px;">🖩</div>
+          <span class="badge badge-lost">Lost</span>
+        </div>
+        <h3 style="font-size:16px;margin-bottom:4px;">Casio FX-991EX Calculator</h3>
+        <p style="font-size:13px;color:var(--text-muted);margin-bottom:12px;">Scientific calculator with name written at the back. Left in Physics lab after practical.</p>
+        <div style="font-size:12px;color:var(--text-light);display:flex;flex-direction:column;gap:4px;">
+          <span>📍 Physics Lab — A Block</span>
+          <span>📅 Apr 28, 2026</span>
+          <span>📞 Priya M. · 8800001234</span>
+        </div>
+        <button class="btn btn-outline" style="width:100%;justify-content:center;margin-top:14px;font-size:13px;" onclick="showToast('Contact info copied!')">Contact Owner</button>
+      </div>
+
+      <div class="card filterable-card" data-tags="found,accessories,ground">
+        <div style="display:flex;justify-content:space-between;align-items:flex-start;margin-bottom:12px;">
+          <div style="font-size:32px;">⌚</div>
+          <span class="badge badge-found">Found</span>
+        </div>
+        <h3 style="font-size:16px;margin-bottom:4px;">Sports Wristwatch</h3>
+        <p style="font-size:13px;color:var(--text-muted);margin-bottom:12px;">Black Fastrack watch found near the football ground. Currently with security desk.</p>
+        <div style="font-size:12px;color:var(--text-light);display:flex;flex-direction:column;gap:4px;">
+          <span>📍 Sports Ground — Gate 2</span>
+          <span>📅 Apr 25, 2026</span>
+          <span>📞 Security Desk · Ext. 105</span>
+        </div>
+        <button class="btn btn-outline" style="width:100%;justify-content:center;margin-top:14px;font-size:13px;" onclick="showToast('Contact info copied!')">Contact Finder</button>
+      </div>
+
+      <div class="card filterable-card" data-tags="lost,clothing,hostel">
+        <div style="display:flex;justify-content:space-between;align-items:flex-start;margin-bottom:12px;">
+          <div style="font-size:32px;">🧥</div>
+          <span class="badge badge-lost">Lost</span>
+        </div>
+        <h3 style="font-size:16px;margin-bottom:4px;">Black Hoodie (GEU Print)</h3>
+        <p style="font-size:13px;color:var(--text-muted);margin-bottom:12px;">GEU printed black hoodie, size L. Left on the rooftop of Boys Hostel Block B.</p>
+        <div style="font-size:12px;color:var(--text-light);display:flex;flex-direction:column;gap:4px;">
+          <span>📍 Hostel Block B — Rooftop</span>
+          <span>📅 Apr 22, 2026</span>
+          <span>📞 Deepak R. · 7700998877</span>
+        </div>
+        <button class="btn btn-outline" style="width:100%;justify-content:center;margin-top:14px;font-size:13px;" onclick="showToast('Contact info copied!')">Contact Owner</button>
+      </div>
+
+      <div class="card filterable-card" data-tags="found,books,library">
+        <div style="display:flex;justify-content:space-between;align-items:flex-start;margin-bottom:12px;">
+          <div style="font-size:32px;">📚</div>
+          <span class="badge badge-found">Found</span>
+        </div>
+        <h3 style="font-size:16px;margin-bottom:4px;">Data Structures Textbook</h3>
+        <p style="font-size:13px;color:var(--text-muted);margin-bottom:12px;">Cormen's CLRS textbook found at the library exit table. Owner's name not written.</p>
+        <div style="font-size:12px;color:var(--text-light);display:flex;flex-direction:column;gap:4px;">
+          <span>📍 Central Library — Exit Area</span>
+          <span>📅 Apr 20, 2026</span>
+          <span>📞 Sakshi T. · 9988776655</span>
+        </div>
+        <button class="btn btn-outline" style="width:100%;justify-content:center;margin-top:14px;font-size:13px;" onclick="showToast('Contact info copied!')">Contact Finder</button>
+      </div>
+
+      <div class="card filterable-card" data-tags="lost,other,cafeteria">
+        <div style="display:flex;justify-content:space-between;align-items:flex-start;margin-bottom:12px;">
+          <div style="font-size:32px;">🍱</div>
+          <span class="badge badge-lost">Lost</span>
+        </div>
+        <h3 style="font-size:16px;margin-bottom:4px;">Steel Tiffin Box</h3>
+        <p style="font-size:13px;color:var(--text-muted);margin-bottom:12px;">3-tier steel tiffin with "Mehta" written in marker. Lost near the cafeteria queue.</p>
+        <div style="font-size:12px;color:var(--text-light);display:flex;flex-direction:column;gap:4px;">
+          <span>📍 Cafeteria — South Wing</span>
+          <span>📅 Apr 18, 2026</span>
+          <span>📞 Karan M. · 9000011112</span>
+        </div>
+        <button class="btn btn-outline" style="width:100%;justify-content:center;margin-top:14px;font-size:13px;" onclick="showToast('Contact info copied!')">Contact Owner</button>
+      </div>
+
+      <div class="card filterable-card" data-tags="found,accessories,lab">
+        <div style="display:flex;justify-content:space-between;align-items:flex-start;margin-bottom:12px;">
+          <div style="font-size:32px;">🔑</div>
+          <span class="badge badge-found">Found</span>
+        </div>
+        <h3 style="font-size:16px;margin-bottom:4px;">Keychain with 3 Keys</h3>
+        <p style="font-size:13px;color:var(--text-muted);margin-bottom:12px;">Found a set of 3 keys with a blue GEU keychain. Left on a computer lab desk.</p>
+        <div style="font-size:12px;color:var(--text-light);display:flex;flex-direction:column;gap:4px;">
+          <span>📍 Computer Lab 3 — C Block</span>
+          <span>📅 Apr 15, 2026</span>
+          <span>📞 Nisha P. · 8877665544</span>
+        </div>
+        <button class="btn btn-outline" style="width:100%;justify-content:center;margin-top:14px;font-size:13px;" onclick="showToast('Contact info copied!')">Contact Finder</button>
+      </div>
+
+    </div>
+  </main>
+</div>
+
+<!-- REPORT MODAL -->
+<div class="modal-overlay" id="reportModal">
+  <div class="modal">
+    <h2>Report an Item</h2>
+    <div class="form-row">
+      <div class="form-group">
+        <label>Item Name *</label>
+        <input type="text" placeholder="e.g. Blue Water Bottle" />
+      </div>
+      <div class="form-group">
+        <label>Status *</label>
+        <select>
+          <option value="">Select...</option>
+          <option>Lost</option>
+          <option>Found</option>
+        </select>
+      </div>
+    </div>
+    <div class="form-row">
+      <div class="form-group">
+        <label>Category</label>
+        <select>
+          <option>Electronics</option>
+          <option>ID / Cards</option>
+          <option>Clothing</option>
+          <option>Books</option>
+          <option>Accessories</option>
+          <option>Other</option>
+        </select>
+      </div>
+      <div class="form-group">
+        <label>Date</label>
+        <input type="date" />
+      </div>
+    </div>
+    <div class="form-group">
+      <label>Last Seen / Found Location *</label>
+      <input type="text" placeholder="e.g. Library 2nd Floor, Block A" />
+    </div>
+    <div class="form-group">
+      <label>Description</label>
+      <textarea placeholder="Describe the item — color, brand, distinguishing marks..."></textarea>
+    </div>
+    <div class="form-group">
+      <label>Your Contact (Phone / Email)</label>
+      <input type="text" placeholder="e.g. 9876543210 or you@geu.ac.in" />
+    </div>
+    <div class="modal-actions">
+      <button class="btn btn-ghost" onclick="closeModal('reportModal')">Cancel</button>
+      <button class="btn btn-primary" onclick="submitReport()">Submit Report</button>
+    </div>
+  </div>
+</div>
+
+<!-- FOOTER -->
+<footer>
+  <div class="footer-inner">
+    <div class="footer-brand">
+      <div class="logo">GEU <span>Nexus</span></div>
+      <p>A student-built platform connecting the GEU campus community.</p>
+    </div>
+    <div class="footer-col"><h4>Features</h4><ul>
+      <li><a href="lost-found.html">Lost & Found</a></li>
+      <li><a href="marketplace.html">Marketplace</a></li>
+      <li><a href="cafes.html">Cafes</a></li>
+      <li><a href="pgs.html">PGs</a></li>
+    </ul></div>
+    <div class="footer-col"><h4>Campus</h4><ul>
+      <li><a href="index.html#announcements">Notices</a></li>
+      <li><a href="index.html#login">Login</a></li>
+    </ul></div>
+    <div class="footer-col"><h4>Contact</h4><ul>
+      <li><a href="#">About</a></li>
+      <li><a href="#">Feedback</a></li>
+    </ul></div>
+  </div>
+  <div class="footer-bottom">
+    <span>© 2026 GEU Nexus. Built with ❤️ by GEU students.</span>
+    <span>Graphic Era University, Dehradun</span>
+  </div>
+</footer>
+
+<script src="app.js"></script>
+<script>
+function submitReport() {
+  closeModal('reportModal');
+  showToast('Item reported successfully! We\'ll notify you of any matches. 📬');
+}
+function sortCards(val) {
+  // visual feedback only for static demo
+  showToast('Sorted by ' + (val === 'newest' ? 'Newest First' : 'Oldest First'));
+}
+</script>
+</body>
+</html>

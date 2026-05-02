@@ -1,0 +1,252 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>PG Listings — GEU Nexus</title>
+  <link rel="stylesheet" href="style.css" />
+  <style>
+    .pg-img {
+      width: 100%; height: 120px;
+      background: var(--surface2);
+      border-radius: var(--radius-sm);
+      display: flex; align-items: center; justify-content: center;
+      font-size: 44px; margin-bottom: 14px;
+      border: 1px solid var(--border);
+    }
+    .rent-tag {
+      font-family: 'Syne', sans-serif;
+      font-size: 19px; font-weight: 700;
+      color: var(--accent); margin: 6px 0 4px;
+    }
+    .rent-tag span { font-size: 13px; font-weight: 400; color: var(--text-muted); }
+    .amenity-tag {
+      display: inline-block;
+      background: var(--accent-light); color: var(--accent);
+      font-size: 11px; font-weight: 600; padding: 3px 9px;
+      border-radius: 100px; margin: 2px 2px 0 0;
+    }
+    .gender-badge {
+      font-size: 11px; font-weight: 700;
+      padding: 3px 10px; border-radius: 100px;
+    }
+    .boys { background: #EFF6FF; color: #2563EB; }
+    .girls { background: #FDF2F8; color: #9333EA; }
+    .coed { background: #F0FDF4; color: #16A34A; }
+  </style>
+</head>
+<body>
+
+<nav class="navbar">
+  <a href="index.html" class="nav-logo">GEU <span>Nexus</span></a>
+  <ul class="nav-links" id="navLinks">
+    <li><a href="index.html">Home</a></li>
+    <li><a href="lost-found.html">Lost & Found</a></li>
+    <li><a href="marketplace.html">Buy/Sell/Donate</a></li>
+    <li><a href="cafes.html">Cafes</a></li>
+    <li><a href="pgs.html" class="active">PGs</a></li>
+    <li><a href="index.html#announcements">Notices</a></li>
+  </ul>
+  <div class="nav-right">
+    <a href="index.html#login" class="btn btn-outline">Login</a>
+    <button class="hamburger" id="hamburger"><span></span><span></span><span></span></button>
+  </div>
+</nav>
+
+<div class="page-header">
+  <div>
+    <h1>🏠 PG Listings</h1>
+    <p>Find comfortable paying guest accommodations near GEU campus.</p>
+  </div>
+  <button class="btn btn-primary" onclick="openModal('pgModal')">+ List Your PG</button>
+</div>
+
+<div class="page-wrap">
+  <aside class="sidebar">
+    <div class="filter-group">
+      <h3>Gender</h3>
+      <label><input type="radio" name="gender" class="filter-radio" value="all" checked> All PGs</label>
+      <label><input type="radio" name="gender" class="filter-radio" value="boys"> Boys Only</label>
+      <label><input type="radio" name="gender" class="filter-radio" value="girls"> Girls Only</label>
+      <label><input type="radio" name="gender" class="filter-radio" value="coed"> Co-ed</label>
+    </div>
+    <hr class="sidebar-divider">
+    <div class="filter-group">
+      <h3>Price Range / Month</h3>
+      <label><input type="radio" name="price" class="filter-radio" value="all" checked> Any</label>
+      <label><input type="radio" name="price" class="filter-radio" value="budget"> Under ₹5,000</label>
+      <label><input type="radio" name="price" class="filter-radio" value="mid"> ₹5,000–7,000</label>
+      <label><input type="radio" name="price" class="filter-radio" value="premium"> ₹7,000+</label>
+    </div>
+    <hr class="sidebar-divider">
+    <div class="filter-group">
+      <h3>Amenities</h3>
+      <label><input type="checkbox" class="filter-cb" value="wifi"> WiFi</label>
+      <label><input type="checkbox" class="filter-cb" value="meals"> Meals Included</label>
+      <label><input type="checkbox" class="filter-cb" value="ac"> AC Rooms</label>
+      <label><input type="checkbox" class="filter-cb" value="laundry"> Laundry</label>
+      <label><input type="checkbox" class="filter-cb" value="parking"> Parking</label>
+      <label><input type="checkbox" class="filter-cb" value="gym"> Gym</label>
+    </div>
+  </aside>
+
+  <main class="main-content">
+    <p class="section-title" style="margin-bottom:16px;">6 PGs listed</p>
+    <div class="card-grid">
+
+      <div class="card filterable-card" data-tags="boys,mid,wifi,meals,laundry">
+        <div class="pg-img">🏡</div>
+        <div style="display:flex;justify-content:space-between;align-items:flex-start;margin-bottom:6px;">
+          <h3 style="font-size:16px;">Sunrise PG for Boys</h3>
+          <span class="gender-badge boys">Boys</span>
+        </div>
+        <div class="rent-tag">₹5,500 <span>/ month</span></div>
+        <p style="font-size:12px;color:var(--text-muted);margin-bottom:8px;">📍 200m from Main Gate, Sector 7</p>
+        <p style="font-size:13px;color:var(--text-muted);margin-bottom:10px;">Spacious rooms with attached bath, meals 3x daily, and 24hr security. 2 & 3-sharing available.</p>
+        <div><span class="amenity-tag">📶 WiFi</span><span class="amenity-tag">🍽 Meals</span><span class="amenity-tag">🧺 Laundry</span></div>
+        <button class="btn btn-primary" style="width:100%;justify-content:center;margin-top:14px;font-size:13px;" onclick="showToast('Owner: Mr. Sharma · 9811001122')">Contact Owner</button>
+      </div>
+
+      <div class="card filterable-card" data-tags="girls,mid,wifi,meals,ac,laundry">
+        <div class="pg-img">🏘️</div>
+        <div style="display:flex;justify-content:space-between;align-items:flex-start;margin-bottom:6px;">
+          <h3 style="font-size:16px;">GreenView Girls PG</h3>
+          <span class="gender-badge girls">Girls</span>
+        </div>
+        <div class="rent-tag">₹6,200 <span>/ month</span></div>
+        <p style="font-size:12px;color:var(--text-muted);margin-bottom:8px;">📍 350m from Back Gate, Premnagar</p>
+        <p style="font-size:13px;color:var(--text-muted);margin-bottom:10px;">Fully furnished AC rooms in a safe, gated premises. Female warden on-site, biometric entry.</p>
+        <div><span class="amenity-tag">📶 WiFi</span><span class="amenity-tag">🍽 Meals</span><span class="amenity-tag">❄️ AC</span><span class="amenity-tag">🧺 Laundry</span></div>
+        <button class="btn btn-primary" style="width:100%;justify-content:center;margin-top:14px;font-size:13px;" onclick="showToast('Owner: Mrs. Nair · 9822334455')">Contact Owner</button>
+      </div>
+
+      <div class="card filterable-card" data-tags="boys,budget,wifi,meals">
+        <div class="pg-img">🏠</div>
+        <div style="display:flex;justify-content:space-between;align-items:flex-start;margin-bottom:6px;">
+          <h3 style="font-size:16px;">Budget Stay — Block 4</h3>
+          <span class="gender-badge boys">Boys</span>
+        </div>
+        <div class="rent-tag">₹4,200 <span>/ month</span></div>
+        <p style="font-size:12px;color:var(--text-muted);margin-bottom:8px;">📍 500m from Campus Gate, Sahastradhara Rd</p>
+        <p style="font-size:13px;color:var(--text-muted);margin-bottom:10px;">No-frills but clean and comfortable. 4-sharing rooms, breakfast and dinner included. Great for budget students.</p>
+        <div><span class="amenity-tag">📶 WiFi</span><span class="amenity-tag">🍽 Meals</span></div>
+        <button class="btn btn-primary" style="width:100%;justify-content:center;margin-top:14px;font-size:13px;" onclick="showToast('Owner: Mr. Gupta · 9900112233')">Contact Owner</button>
+      </div>
+
+      <div class="card filterable-card" data-tags="coed,premium,wifi,ac,parking,gym">
+        <div class="pg-img">🏢</div>
+        <div style="display:flex;justify-content:space-between;align-items:flex-start;margin-bottom:6px;">
+          <h3 style="font-size:16px;">The Scholar's Den</h3>
+          <span class="gender-badge coed">Co-ed</span>
+        </div>
+        <div class="rent-tag">₹8,500 <span>/ month</span></div>
+        <p style="font-size:12px;color:var(--text-muted);margin-bottom:8px;">📍 600m from GEU, Rajpur Road</p>
+        <p style="font-size:13px;color:var(--text-muted);margin-bottom:10px;">Premium co-living space with private rooms, high-speed WiFi, gym, and a study lounge. Ideal for serious students.</p>
+        <div><span class="amenity-tag">📶 WiFi</span><span class="amenity-tag">❄️ AC</span><span class="amenity-tag">🏋️ Gym</span><span class="amenity-tag">🅿 Parking</span></div>
+        <button class="btn btn-primary" style="width:100%;justify-content:center;margin-top:14px;font-size:13px;" onclick="showToast('Manager: Aditi · 9811223344')">Contact Owner</button>
+      </div>
+
+      <div class="card filterable-card" data-tags="girls,mid,wifi,meals,laundry,parking">
+        <div class="pg-img">🏡</div>
+        <div style="display:flex;justify-content:space-between;align-items:flex-start;margin-bottom:6px;">
+          <h3 style="font-size:16px;">Devi Sadan Girls PG</h3>
+          <span class="gender-badge girls">Girls</span>
+        </div>
+        <div class="rent-tag">₹5,800 <span>/ month</span></div>
+        <p style="font-size:12px;color:var(--text-muted);margin-bottom:8px;">📍 400m from GEU South Gate</p>
+        <p style="font-size:13px;color:var(--text-muted);margin-bottom:10px;">Homely atmosphere with home-cooked meals. Owner family lives on-site. Very safe and highly recommended.</p>
+        <div><span class="amenity-tag">📶 WiFi</span><span class="amenity-tag">🍽 Meals</span><span class="amenity-tag">🧺 Laundry</span><span class="amenity-tag">🅿 Parking</span></div>
+        <button class="btn btn-primary" style="width:100%;justify-content:center;margin-top:14px;font-size:13px;" onclick="showToast('Owner: Mrs. Devi · 9877665544')">Contact Owner</button>
+      </div>
+
+      <div class="card filterable-card" data-tags="boys,mid,wifi,ac,meals,laundry,gym">
+        <div class="pg-img">🏠</div>
+        <div style="display:flex;justify-content:space-between;align-items:flex-start;margin-bottom:6px;">
+          <h3 style="font-size:16px;">Peak Point PG</h3>
+          <span class="gender-badge boys">Boys</span>
+        </div>
+        <div class="rent-tag">₹6,800 <span>/ month</span></div>
+        <p style="font-size:12px;color:var(--text-muted);margin-bottom:8px;">📍 750m from Campus, Haridwar Bypass</p>
+        <p style="font-size:13px;color:var(--text-muted);margin-bottom:10px;">Modern PG with semi-AC rooms, common gym, and daily housekeeping. 2-sharing and single rooms available.</p>
+        <div><span class="amenity-tag">📶 WiFi</span><span class="amenity-tag">❄️ AC</span><span class="amenity-tag">🍽 Meals</span><span class="amenity-tag">🏋️ Gym</span><span class="amenity-tag">🧺 Laundry</span></div>
+        <button class="btn btn-primary" style="width:100%;justify-content:center;margin-top:14px;font-size:13px;" onclick="showToast('Owner: Mr. Rawat · 9800456789')">Contact Owner</button>
+      </div>
+
+    </div>
+  </main>
+</div>
+
+<!-- LIST PG MODAL -->
+<div class="modal-overlay" id="pgModal">
+  <div class="modal">
+    <h2>List Your PG</h2>
+    <div class="form-row">
+      <div class="form-group">
+        <label>PG Name *</label>
+        <input type="text" placeholder="e.g. Sunrise PG" />
+      </div>
+      <div class="form-group">
+        <label>Gender Type *</label>
+        <select>
+          <option>Boys</option>
+          <option>Girls</option>
+          <option>Co-ed</option>
+        </select>
+      </div>
+    </div>
+    <div class="form-row">
+      <div class="form-group">
+        <label>Monthly Rent (₹)</label>
+        <input type="number" placeholder="e.g. 5500" />
+      </div>
+      <div class="form-group">
+        <label>Distance from GEU</label>
+        <input type="text" placeholder="e.g. 300m, 1km" />
+      </div>
+    </div>
+    <div class="form-group">
+      <label>Full Address *</label>
+      <input type="text" placeholder="Street, Area, Dehradun" />
+    </div>
+    <div class="form-group">
+      <label>Description</label>
+      <textarea placeholder="Room types, sharing options, special features..."></textarea>
+    </div>
+    <div class="form-group">
+      <label>Owner Contact *</label>
+      <input type="text" placeholder="Phone number" />
+    </div>
+    <div class="modal-actions">
+      <button class="btn btn-ghost" onclick="closeModal('pgModal')">Cancel</button>
+      <button class="btn btn-primary" onclick="submitPG()">Submit Listing</button>
+    </div>
+  </div>
+</div>
+
+<footer>
+  <div class="footer-inner">
+    <div class="footer-brand"><div class="logo">GEU <span>Nexus</span></div><p>Find the best PG accommodations near GEU campus.</p></div>
+    <div class="footer-col"><h4>Features</h4><ul>
+      <li><a href="lost-found.html">Lost & Found</a></li>
+      <li><a href="marketplace.html">Marketplace</a></li>
+      <li><a href="cafes.html">Cafes</a></li>
+      <li><a href="pgs.html">PGs</a></li>
+    </ul></div>
+    <div class="footer-col"><h4>Campus</h4><ul><li><a href="index.html#announcements">Notices</a></li><li><a href="index.html#login">Login</a></li></ul></div>
+    <div class="footer-col"><h4>Contact</h4><ul><li><a href="#">About</a></li><li><a href="#">Feedback</a></li></ul></div>
+  </div>
+  <div class="footer-bottom">
+    <span>© 2026 GEU Nexus. Built with ❤️ by GEU students.</span>
+    <span>Graphic Era University, Dehradun</span>
+  </div>
+</footer>
+
+<script src="app.js"></script>
+<script>
+function submitPG() {
+  closeModal('pgModal');
+  showToast('PG listed successfully! 🏠 Students will be able to find it now.');
+}
+</script>
+</body>
+</html>

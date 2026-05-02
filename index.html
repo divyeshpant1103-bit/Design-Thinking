@@ -1,0 +1,439 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>GEU Nexus — Your Campus, Connected</title>
+  <link rel="stylesheet" href="style.css" />
+  <style>
+    /* ── HERO ── */
+    .hero {
+      background: var(--surface);
+      border-bottom: 1px solid var(--border);
+      padding: 80px 24px 72px;
+      text-align: center;
+      position: relative;
+      overflow: hidden;
+    }
+    .hero::before {
+      content: '';
+      position: absolute; inset: 0;
+      background: radial-gradient(ellipse 70% 60% at 50% -10%, rgba(45,91,227,0.07), transparent);
+    }
+    .hero-eyebrow {
+      display: inline-flex; align-items: center; gap: 6px;
+      background: var(--accent-light);
+      color: var(--accent);
+      font-size: 12px; font-weight: 700;
+      letter-spacing: 0.08em; text-transform: uppercase;
+      padding: 5px 14px; border-radius: 100px;
+      margin-bottom: 20px;
+    }
+    .hero h1 {
+      font-size: clamp(36px, 6vw, 64px);
+      color: var(--text);
+      max-width: 700px; margin: 0 auto 16px;
+    }
+    .hero h1 span { color: var(--accent); }
+    .hero p {
+      font-size: 17px; color: var(--text-muted);
+      max-width: 480px; margin: 0 auto 36px;
+      line-height: 1.7;
+    }
+
+    /* Search bar */
+    .hero-search {
+      position: relative; max-width: 580px; margin: 0 auto 28px;
+    }
+    .hero-search input {
+      width: 100%;
+      padding: 16px 56px 16px 20px;
+      border: 1.5px solid var(--border);
+      border-radius: 100px;
+      font-family: 'DM Sans', sans-serif;
+      font-size: 15px; color: var(--text);
+      background: white;
+      outline: none;
+      box-shadow: 0 4px 20px rgba(0,0,0,0.06);
+      transition: border-color var(--transition), box-shadow var(--transition);
+    }
+    .hero-search input:focus {
+      border-color: var(--accent);
+      box-shadow: 0 4px 20px rgba(45,91,227,0.12);
+    }
+    .hero-search button {
+      position: absolute; right: 6px; top: 50%;
+      transform: translateY(-50%);
+      background: var(--accent); color: white;
+      border: none; border-radius: 100px;
+      width: 44px; height: 44px;
+      display: flex; align-items: center; justify-content: center;
+      cursor: pointer; font-size: 18px;
+      transition: all var(--transition);
+    }
+    .hero-search button:hover { background: var(--accent-dark); }
+
+    .search-results {
+      position: absolute; top: calc(100% + 8px); left: 0; right: 0;
+      background: white; border: 1px solid var(--border);
+      border-radius: var(--radius); box-shadow: var(--shadow-md);
+      max-height: 280px; overflow-y: auto;
+      display: none; text-align: left;
+      z-index: 10;
+    }
+    .search-results.open { display: block; }
+    .search-item {
+      display: flex; align-items: center; gap: 12px;
+      padding: 12px 16px; font-size: 14px;
+      cursor: pointer; transition: background var(--transition);
+      border-bottom: 1px solid var(--border);
+    }
+    .search-item:last-child { border-bottom: none; }
+    .search-item:hover { background: var(--bg); }
+    .search-item .si-cat {
+      font-size: 11px; font-weight: 600;
+      color: var(--accent); letter-spacing: 0.06em;
+      text-transform: uppercase; min-width: 70px;
+    }
+    .search-item .si-name { font-weight: 500; }
+    .search-item .si-sub { color: var(--text-muted); font-size: 12px; }
+
+    /* Quick tiles */
+    .quick-tiles {
+      max-width: 900px; margin: 0 auto;
+      display: grid; grid-template-columns: repeat(4, 1fr); gap: 12px;
+    }
+    .quick-tile {
+      background: var(--bg);
+      border: 1.5px solid var(--border);
+      border-radius: var(--radius);
+      padding: 18px 14px;
+      text-align: center; cursor: pointer;
+      transition: all var(--transition);
+      text-decoration: none; color: inherit;
+      display: block;
+    }
+    .quick-tile:hover {
+      background: white; border-color: var(--accent);
+      box-shadow: 0 4px 16px rgba(45,91,227,0.1);
+      transform: translateY(-2px);
+    }
+    .quick-tile .icon { font-size: 26px; margin-bottom: 8px; }
+    .quick-tile .label { font-size: 13px; font-weight: 600; color: var(--text); }
+    .quick-tile .sublabel { font-size: 11px; color: var(--text-muted); margin-top: 2px; }
+
+    /* ── SECTION ── */
+    .home-sections {
+      max-width: 1100px; margin: 0 auto;
+      padding: 60px 24px;
+      display: grid; grid-template-columns: 1fr 1fr; gap: 40px;
+    }
+
+    /* Announcements */
+    .announce-card {
+      background: var(--surface);
+      border: 1px solid var(--border);
+      border-radius: var(--radius);
+      padding: 16px 18px;
+      display: flex; gap: 14px;
+      align-items: flex-start;
+      transition: all var(--transition);
+    }
+    .announce-card:hover { box-shadow: var(--shadow); }
+    .announce-dot {
+      width: 8px; height: 8px; border-radius: 50%;
+      background: var(--accent); flex-shrink: 0; margin-top: 7px;
+    }
+    .announce-card h4 { font-size: 15px; margin-bottom: 4px; }
+    .announce-card p { font-size: 13px; color: var(--text-muted); line-height: 1.6; }
+    .announce-card .date { font-size: 11px; color: var(--text-light); margin-top: 6px; font-weight: 500; }
+
+    /* Login / Profile */
+    .auth-panel {
+      background: var(--surface);
+      border: 1px solid var(--border);
+      border-radius: var(--radius);
+      padding: 28px;
+    }
+    .auth-panel h2 { font-size: 20px; margin-bottom: 6px; }
+    .auth-panel > p { font-size: 13px; color: var(--text-muted); margin-bottom: 22px; }
+
+    .profile-card {
+      display: none;
+      background: var(--accent-light);
+      border: 1.5px solid rgba(45,91,227,0.15);
+      border-radius: var(--radius);
+      padding: 20px;
+      margin-top: 20px;
+      animation: fadeUp 0.3s ease;
+    }
+    .profile-card.show { display: block; }
+    .profile-avatar {
+      width: 52px; height: 52px; border-radius: 50%;
+      background: var(--accent);
+      display: flex; align-items: center; justify-content: center;
+      color: white; font-size: 20px; font-weight: 700;
+      margin-bottom: 12px;
+      font-family: 'Syne', sans-serif;
+    }
+    .profile-card h3 { font-size: 16px; }
+    .profile-card .meta { font-size: 13px; color: var(--text-muted); margin-top: 4px; line-height: 1.6; }
+    .profile-card .logout {
+      margin-top: 14px; font-size: 13px; color: var(--danger);
+      cursor: pointer; font-weight: 600;
+    }
+
+    @media (max-width: 768px) {
+      .quick-tiles { grid-template-columns: repeat(2, 1fr); }
+      .home-sections { grid-template-columns: 1fr; padding: 32px 16px; }
+    }
+  </style>
+</head>
+<body>
+
+<!-- NAVBAR -->
+<nav class="navbar">
+  <a href="index.html" class="nav-logo">GEU <span>Nexus</span></a>
+  <ul class="nav-links" id="navLinks">
+    <li><a href="index.html" class="active">Home</a></li>
+    <li><a href="lost-found.html">Lost & Found</a></li>
+    <li><a href="marketplace.html">Buy/Sell/Donate</a></li>
+    <li><a href="cafes.html">Cafes</a></li>
+    <li><a href="pgs.html">PGs</a></li>
+    <li><a href="#announcements">Notices</a></li>
+  </ul>
+  <div class="nav-right">
+    <a href="#login" class="btn btn-outline">Login</a>
+    <button class="hamburger" id="hamburger" aria-label="Menu">
+      <span></span><span></span><span></span>
+    </button>
+  </div>
+</nav>
+
+<!-- HERO -->
+<section class="hero">
+  <div class="hero-eyebrow">🎓 Graphic Era University</div>
+  <h1 class="fade-up">Your Campus,<br><span>Connected.</span></h1>
+  <p class="fade-up delay-1">Lost something? Need to sell your old books? Looking for a PG nearby? GEU Nexus has it all — built for students, by students.</p>
+
+  <div class="hero-search fade-up delay-2">
+    <input type="text" id="heroSearch" placeholder="Search lost items, listings, cafes, PGs..." autocomplete="off" />
+    <button onclick="doSearch()">→</button>
+    <div class="search-results" id="searchResults"></div>
+  </div>
+
+  <div class="quick-tiles fade-up delay-3">
+    <a href="lost-found.html" class="quick-tile">
+      <div class="icon">🔍</div>
+      <div class="label">Lost & Found</div>
+      <div class="sublabel">Report or find items</div>
+    </a>
+    <a href="marketplace.html" class="quick-tile">
+      <div class="icon">🛒</div>
+      <div class="label">Buy / Sell / Donate</div>
+      <div class="sublabel">Campus marketplace</div>
+    </a>
+    <a href="cafes.html" class="quick-tile">
+      <div class="icon">☕</div>
+      <div class="label">Nearby Cafes</div>
+      <div class="sublabel">Food spots around GEU</div>
+    </a>
+    <a href="pgs.html" class="quick-tile">
+      <div class="icon">🏠</div>
+      <div class="label">PG Listings</div>
+      <div class="sublabel">Find accommodation</div>
+    </a>
+  </div>
+</section>
+
+<!-- MAIN CONTENT -->
+<div class="home-sections">
+
+  <!-- ANNOUNCEMENTS -->
+  <div id="announcements">
+    <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:20px;">
+      <h2 style="font-size:22px;">📢 Notice Board</h2>
+      <span style="font-size:13px;color:var(--text-muted);">4 announcements</span>
+    </div>
+    <div style="display:flex;flex-direction:column;gap:12px;">
+      <div class="announce-card">
+        <div class="announce-dot"></div>
+        <div>
+          <h4>Mid-Semester Exam Schedule Released</h4>
+          <p>The schedule for B.Tech mid-semester examinations has been uploaded to the ERP portal. Check your respective department.</p>
+          <div class="date">May 1, 2026 · Academic</div>
+        </div>
+      </div>
+      <div class="announce-card">
+        <div class="announce-dot" style="background:#16A34A"></div>
+        <div>
+          <h4>Hackathon 2026 — Registrations Open</h4>
+          <p>Annual GEU Hackathon is back! Register your team of 2–4 students before May 15. Theme: Smart Campus Solutions.</p>
+          <div class="date">Apr 29, 2026 · Events</div>
+        </div>
+      </div>
+      <div class="announce-card">
+        <div class="announce-dot" style="background:#D97706"></div>
+        <div>
+          <h4>Library Timings Extended for Exams</h4>
+          <p>The central library will remain open until 10 PM from May 5–20 to support students preparing for semester exams.</p>
+          <div class="date">Apr 27, 2026 · Campus</div>
+        </div>
+      </div>
+      <div class="announce-card">
+        <div class="announce-dot" style="background:#9333EA"></div>
+        <div>
+          <h4>New Shuttle Route Added — Dehradun Central</h4>
+          <p>A new shuttle service connecting GEU main gate to Dehradun ISBT has been added. Timing: 6 AM and 8 PM daily.</p>
+          <div class="date">Apr 24, 2026 · Transport</div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- LOGIN / PROFILE -->
+  <div id="login">
+    <div class="auth-panel">
+      <h2>Student Login</h2>
+      <p>Access your GEU Nexus account to post listings and connect with peers.</p>
+
+      <div id="loginForm">
+        <div class="form-group">
+          <label>University Email</label>
+          <input type="email" id="loginEmail" placeholder="rollno@geu.ac.in" />
+        </div>
+        <div class="form-group">
+          <label>Password</label>
+          <input type="password" id="loginPass" placeholder="••••••••" />
+        </div>
+        <button class="btn btn-primary" style="width:100%;justify-content:center;padding:12px;" onclick="handleLogin()">Login to GEU Nexus</button>
+        <p style="text-align:center;font-size:13px;color:var(--text-muted);margin-top:12px;">
+          Don't have an account? <a href="#" style="color:var(--accent);font-weight:600;">Register</a>
+        </p>
+      </div>
+
+      <div class="profile-card" id="profileCard">
+        <div class="profile-avatar" id="profileAvatar">A</div>
+        <h3 id="profileName">Arjun Sharma</h3>
+        <div class="meta" id="profileMeta">
+          Roll No: 22BIT0042<br>
+          B.Tech CSE — 4th Semester<br>
+          Hostel: Block C, Room 214
+        </div>
+        <div class="logout" onclick="handleLogout()">↩ Logout</div>
+      </div>
+    </div>
+  </div>
+
+</div>
+
+<!-- FOOTER -->
+<footer>
+  <div class="footer-inner">
+    <div class="footer-brand">
+      <div class="logo">GEU <span>Nexus</span></div>
+      <p>A student-built platform connecting the GEU campus community — for lost items, marketplace, and campus life.</p>
+    </div>
+    <div class="footer-col">
+      <h4>Features</h4>
+      <ul>
+        <li><a href="lost-found.html">Lost & Found</a></li>
+        <li><a href="marketplace.html">Marketplace</a></li>
+        <li><a href="cafes.html">Nearby Cafes</a></li>
+        <li><a href="pgs.html">PG Listings</a></li>
+      </ul>
+    </div>
+    <div class="footer-col">
+      <h4>Campus</h4>
+      <ul>
+        <li><a href="#announcements">Notice Board</a></li>
+        <li><a href="#login">Student Login</a></li>
+        <li><a href="#">ERP Portal</a></li>
+        <li><a href="#">Library</a></li>
+      </ul>
+    </div>
+    <div class="footer-col">
+      <h4>Contact</h4>
+      <ul>
+        <li><a href="#">About Us</a></li>
+        <li><a href="#">Report Issue</a></li>
+        <li><a href="#">Feedback</a></li>
+        <li><a href="#">Instagram</a></li>
+      </ul>
+    </div>
+  </div>
+  <div class="footer-bottom">
+    <span>© 2026 GEU Nexus. Built with ❤️ by GEU students.</span>
+    <span>Graphic Era University, Dehradun</span>
+  </div>
+</footer>
+
+<script src="app.js"></script>
+<script>
+const searchData = [
+  { cat:'Lost & Found', name:'Blue Water Bottle', sub:'Reported near Cafeteria Block', href:'lost-found.html' },
+  { cat:'Lost & Found', name:'Samsung Galaxy Buds', sub:'Lost at Library reading hall', href:'lost-found.html' },
+  { cat:'Lost & Found', name:'Student ID Card', sub:'Found at Main Gate', href:'lost-found.html' },
+  { cat:'Marketplace', name:'Engineering Mathematics Book', sub:'₹180 · 2nd Year CSE', href:'marketplace.html' },
+  { cat:'Marketplace', name:'Study Table (Free Donation)', sub:'Hostel Block A', href:'marketplace.html' },
+  { cat:'Marketplace', name:'Casio Scientific Calculator', sub:'₹350 · Good condition', href:'marketplace.html' },
+  { cat:'Cafe', name:'Campus Bites', sub:'50m from Main Gate · ⭐ 4.3', href:'cafes.html' },
+  { cat:'Cafe', name:'The GEU Grind', sub:'Inside campus · ⭐ 4.6', href:'cafes.html' },
+  { cat:'PG', name:'Sunrise PG for Boys', sub:'₹5500/mo · 200m from campus', href:'pgs.html' },
+  { cat:'PG', name:'GreenView Girls PG', sub:'₹6000/mo · AC rooms available', href:'pgs.html' },
+];
+
+const heroSearch = document.getElementById('heroSearch');
+const resultsBox = document.getElementById('searchResults');
+
+heroSearch.addEventListener('input', () => {
+  const q = heroSearch.value.trim().toLowerCase();
+  if (!q) { resultsBox.classList.remove('open'); return; }
+  const matches = searchData.filter(d =>
+    d.name.toLowerCase().includes(q) || d.cat.toLowerCase().includes(q) || d.sub.toLowerCase().includes(q)
+  );
+  if (!matches.length) { resultsBox.classList.remove('open'); return; }
+  resultsBox.innerHTML = matches.map(m => `
+    <a href="${m.href}" class="search-item">
+      <span class="si-cat">${m.cat}</span>
+      <div><div class="si-name">${m.name}</div><div class="si-sub">${m.sub}</div></div>
+    </a>
+  `).join('');
+  resultsBox.classList.add('open');
+});
+
+document.addEventListener('click', e => {
+  if (!heroSearch.contains(e.target) && !resultsBox.contains(e.target))
+    resultsBox.classList.remove('open');
+});
+
+function doSearch() {
+  const q = heroSearch.value.trim();
+  if (q) showToast(`Searching for "${q}"...`);
+}
+
+function handleLogin() {
+  const email = document.getElementById('loginEmail').value;
+  const pass = document.getElementById('loginPass').value;
+  if (!email || !pass) { showToast('⚠️ Please enter your email and password.'); return; }
+  if (!email.endsWith('@geu.ac.in') && !email.includes('@')) {
+    showToast('⚠️ Please use your GEU email address.'); return;
+  }
+  const name = email.split('@')[0].replace(/[0-9]/g,'').replace(/\b\w/g, c => c.toUpperCase()) || 'Student';
+  document.getElementById('profileName').textContent = name + ' Sharma';
+  document.getElementById('profileAvatar').textContent = name[0].toUpperCase();
+  document.getElementById('loginForm').style.display = 'none';
+  document.getElementById('profileCard').classList.add('show');
+  showToast('Welcome back, ' + name + '! 👋');
+}
+
+function handleLogout() {
+  document.getElementById('loginForm').style.display = '';
+  document.getElementById('profileCard').classList.remove('show');
+  document.getElementById('loginEmail').value = '';
+  document.getElementById('loginPass').value = '';
+  showToast('Logged out successfully.');
+}
+</script>
+</body>
+</html>
