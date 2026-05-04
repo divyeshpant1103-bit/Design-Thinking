@@ -2,11 +2,17 @@
 // 1. UTILITY FUNCTIONS (Modals & Toasts)
 // ==========================================
 function openModal(id) {
-    document.getElementById(id).style.display = 'flex';
+    const modal = document.getElementById(id);
+    if (modal) {
+        modal.style.display = 'flex';
+    }
 }
 
 function closeModal(id) {
-    document.getElementById(id).style.display = 'none';
+    const modal = document.getElementById(id);
+    if (modal) {
+        modal.style.display = 'none';
+    }
 }
 
 function showToast(message) {
@@ -33,18 +39,41 @@ function showToast(message) {
 }
 
 // ==========================================
-// 2. LOST & FOUND (LocalStorage & Handshake)
+// 2. DARK MODE LOGIC (Persistent across pages)
 // ==========================================
-document.addEventListener('DOMContentLoaded', () => {
-    const grid = document.getElementById('itemGrid');
-    if (grid) {
-        let savedItems = JSON.parse(localStorage.getItem('geuNexusItems')) || [];
-        savedItems.forEach(item => {
-            grid.insertAdjacentHTML('afterbegin', createCardHTML(item));
-        });
-    }
-});
+function initTheme() {
+    const savedTheme = localStorage.getItem('geuNexusTheme');
+    const toggleBtn = document.getElementById('themeToggle');
 
+    if (savedTheme === 'dark') {
+        document.body.classList.add('dark-theme');
+        if (toggleBtn) toggleBtn.innerText = '☀️';
+    } else {
+        document.body.classList.remove('dark-theme');
+        if (toggleBtn) toggleBtn.innerText = '🌙';
+    }
+}
+
+function toggleTheme() {
+    const body = document.body;
+    const toggleBtn = document.getElementById('themeToggle');
+
+    body.classList.toggle('dark-theme');
+
+    if (body.classList.contains('dark-theme')) {
+        localStorage.setItem('geuNexusTheme', 'dark');
+        if (toggleBtn) toggleBtn.innerText = '☀️';
+        if (typeof showToast === "function") showToast('Dark Mode Enabled 🌙');
+    } else {
+        localStorage.setItem('geuNexusTheme', 'light');
+        if (toggleBtn) toggleBtn.innerText = '🌙';
+        if (typeof showToast === "function") showToast('Light Mode Enabled ☀️');
+    }
+}
+
+// ==========================================
+// 3. LOST & FOUND (LocalStorage & Handshake)
+// ==========================================
 function submitReport() {
     const nameInput = document.getElementById('reportName');
     const statusInput = document.getElementById('reportStatus');
@@ -129,7 +158,7 @@ function claimItem(btnElement) {
 }
 
 // ==========================================
-// 3. MARKETPLACE (Photo Upload & Meetup)
+// 4. MARKETPLACE (Photo Upload & Meetup)
 // ==========================================
 let currentUploadedPhoto = null;
 
@@ -214,69 +243,9 @@ function sendMeetupInvite() {
     closeModal('meetupModal');
     alert(`✅ Secure Invite Sent!\n\nYou requested to meet at ${loc}. We will notify you once the seller confirms the time!`);
 }
+
 // ==========================================
-// CAFE DIRECTORY (PRE-LOADED GEU SPOTS)
-// ==========================================
-
-const cafeDatabase = [
-  // --- INSIDE CAMPUS ---
-  { name: "Ravi Canteen", emoji: "☕", rating: "★★★★★", location: "Inside Campus", cost: "₹40–120", desc: "Popular for Maggi, samosa, and chai between lectures.", tags: ["walking", "fast-food", "top"], pills: ["Fast Food", "Snacks"] },
-  { name: "Quick Bite Café", emoji: "🧋", rating: "★★★★☆", location: "Inside Campus", cost: "₹60–150", desc: "Quick snacks and cold coffee; ideal for short breaks.", tags: ["walking", "fast-food", "cafe", "good"], pills: ["Fast Food", "Beverages"] },
-  { name: "Happiness Hut", emoji: "🍩", rating: "★★★★★", location: "Inside Campus", cost: "₹80–200", desc: "Known for shakes, desserts, and relaxed hangout vibe.", tags: ["walking", "cafe", "top"], pills: ["Desserts", "Beverages"] },
-  { name: "Main Food Court", emoji: "🍱", rating: "★★★★☆", location: "Inside Campus", cost: "₹70–180", desc: "Multiple options for full meals within campus.", tags: ["walking", "north-indian", "fast-food", "good"], pills: ["North Indian", "Meals"] },
-  
-  // --- OUTSIDE CAMPUS ---
-  { name: "Gupta Burger", emoji: "🍔", rating: "★★★★★", location: "Near GEU Main Gate", cost: "₹50–120", desc: "Budget-friendly burgers and fries; highly popular among students.", tags: ["near", "fast-food", "top"], pills: ["Street Food", "Burgers"] },
-  { name: "Gupta's Cafe & Restaurant", emoji: "🍛", rating: "★★★★☆", location: "Opp. GEU Main Gate", cost: "₹120–250", desc: "Good for proper meals with quick service.", tags: ["near", "north-indian", "good"], pills: ["North Indian", "Meals"] },
-  { name: "Cafe 7th Era", emoji: "🍕", rating: "★★★★★", location: "GEU Road", cost: "₹150–300", desc: "Trendy student café with good ambience.", tags: ["near", "cafe", "fast-food", "top"], pills: ["Cafe", "Ambience"] },
-  { name: "Chill Bro Cafe", emoji: "🍟", rating: "★★★★☆", location: "GEU Road", cost: "₹120–250", desc: "Casual hangout spot with modern vibe.", tags: ["near", "cafe", "good"], pills: ["Cafe", "Snacks"] },
-  { name: "Craving Crew Cafe", emoji: "🥪", rating: "★★★★☆", location: "Near University Area", cost: "₹120–250", desc: "Popular for group hangouts and quick meals.", tags: ["near", "cafe", "fast-food", "good"], pills: ["Hangout", "Fast Food"] },
-  { name: "Lime Light Cafe", emoji: "🍝", rating: "★★★★☆", location: "Nearby Market", cost: "₹150–300", desc: "Stylish café with a good variety of food.", tags: ["near", "cafe", "good"], pills: ["Multi-cuisine", "Stylish"] },
-  { name: "Arth Coffee House", emoji: "☕", rating: "★★★★★", location: "Main Road", cost: "₹150–350", desc: "Premium coffee experience with calm ambience.", tags: ["far", "cafe", "top"], pills: ["Coffee", "Premium"] },
-  { name: "Jo Paji Paratha Corner", emoji: "🧈", rating: "★★★★★", location: "Prem Nagar", cost: "₹80–200", desc: "Famous for stuffed parathas and heavy meals.", tags: ["far", "north-indian", "top"], pills: ["Paratha", "North Indian"] },
-  { name: "Bunkhouse Cafe", emoji: "🥗", rating: "★★★★☆", location: "Post Office Road", cost: "₹150–300", desc: "Cozy café with aesthetic interiors.", tags: ["far", "cafe", "good"], pills: ["Continental", "Aesthetic"] },
-  { name: "Annie's Bakery", emoji: "🍰", rating: "★★★★★", location: "Party Junction", cost: "₹100–300", desc: "Known for cakes, pastries, and baked items.", tags: ["far", "cafe", "top"], pills: ["Bakery", "Desserts"] },
-  { name: "Tamanna Cheesecake", emoji: "🧀", rating: "★★★★★", location: "Café Zone", cost: "₹150–350", desc: "Specializes in cheesecakes and dessert items.", tags: ["far", "cafe", "top"], pills: ["Cheesecake", "Desserts"] },
-  { name: "The Waffle Co.", emoji: "🧇", rating: "★★★★☆", location: "Student Market", cost: "₹120–300", desc: "Sweet waffles and chocolate-based treats.", tags: ["far", "cafe", "good"], pills: ["Waffles", "Sweets"] },
-  { name: "Chai Sutta Bar", emoji: "🍵", rating: "★★★★★", location: "Near University", cost: "₹50–150", desc: "Popular chain for chai, snacks, and student hangouts.", tags: ["near", "fast-food", "top"], pills: ["Chai", "Snacks"] },
-  { name: "Gangchen Tibet Kitchen", emoji: "🥟", rating: "★★★★★", location: "Clement Town", cost: "₹150–300", desc: "Famous for authentic momos and thukpa.", tags: ["far", "chinese", "top"], pills: ["Tibetan", "Momos"] }
-];
-
-function renderCafes() {
-  const grid = document.getElementById('cafeGrid');
-  const count = document.getElementById('cafeCount');
-  
-  if (!grid) return;
-
-  if (count) count.innerText = `${cafeDatabase.length} cafes listed`;
-
-  let html = '';
-  cafeDatabase.forEach(cafe => {
-    let pillsHtml = cafe.pills.map(pill => `<span class="tag-pill">${pill}</span>`).join('');
-    
-    html += `
-      <div class="card filterable-card" data-tags="${cafe.tags.join(',')}">
-        <div class="cafe-img">${cafe.emoji}</div>
-        <h3 style="font-size:16px;">${cafe.name}</h3>
-        <div class="stars">${cafe.rating}</div>
-        <div class="cafe-meta">
-          <span>📍 ${cafe.location}</span>
-          <span>💰 ${cafe.cost}</span>
-        </div>
-        <p style="font-size:13px;color:var(--text-muted);margin-bottom:10px;">${cafe.desc}</p>
-        <div>${pillsHtml}</div>
-        <a href="http://googleusercontent.com/maps.google.com/?q=${encodeURIComponent(cafe.name + ' Dehradun')}" target="_blank" class="btn btn-outline" style="width:100%;justify-content:center;margin-top:14px;font-size:13px;">View on Map 📍</a>
-      </div>
-    `;
-  });
-
-  grid.innerHTML = html;
-}
-
-// Draw the cafes when the page loads
-document.addEventListener('DOMContentLoaded', renderCafes);
-// ==========================================
-// 4. PG LISTINGS (Live Google Sheet Fetch)
+// 5. PG LISTINGS (Live Google Sheet Fetch)
 // ==========================================
 const PG_SHEET_CSV_URL = "https://docs.google.com/spreadsheets/d/e/2PACX-1vTlG_rrgZHXR_ZFpWfD5mIM95QeIYTB7vN8A23F6ibmPPR6AZ9iAm4W5T0VZl2zDfGlDkN3ESTNdqW-/pub?output=csv";
 
@@ -354,43 +323,90 @@ async function loadLivePGs() {
     }
 }
 
-document.addEventListener('DOMContentLoaded', loadLivePGs);
 // ==========================================
-// 🌙 DARK MODE LOGIC (Persistent across pages)
+// 6. CAFE DIRECTORY (PRE-LOADED GEU SPOTS)
 // ==========================================
+const cafeDatabase = [
+  { name: "Ravi Canteen", emoji: "☕", rating: "★★★★★", location: "Inside Campus", cost: "₹40–120", desc: "Popular for Maggi, samosa, and chai between lectures.", tags: ["walking", "fast-food", "top"], pills: ["Fast Food", "Snacks"] },
+  { name: "Quick Bite Café", emoji: "🧋", rating: "★★★★☆", location: "Inside Campus", cost: "₹60–150", desc: "Quick snacks and cold coffee; ideal for short breaks.", tags: ["walking", "fast-food", "cafe", "good"], pills: ["Fast Food", "Beverages"] },
+  { name: "Happiness Hut", emoji: "🍩", rating: "★★★★★", location: "Inside Campus", cost: "₹80–200", desc: "Known for shakes, desserts, and relaxed hangout vibe.", tags: ["walking", "cafe", "top"], pills: ["Desserts", "Beverages"] },
+  { name: "Main Food Court", emoji: "🍱", rating: "★★★★☆", location: "Inside Campus", cost: "₹70–180", desc: "Multiple options for full meals within campus.", tags: ["walking", "north-indian", "fast-food", "good"], pills: ["North Indian", "Meals"] },
+  { name: "Gupta Burger", emoji: "🍔", rating: "★★★★★", location: "Near GEU Main Gate", cost: "₹50–120", desc: "Budget-friendly burgers and fries; highly popular among students.", tags: ["near", "fast-food", "top"], pills: ["Street Food", "Burgers"] },
+  { name: "Gupta's Cafe & Restaurant", emoji: "🍛", rating: "★★★★☆", location: "Opp. GEU Main Gate", cost: "₹120–250", desc: "Good for proper meals with quick service.", tags: ["near", "north-indian", "good"], pills: ["North Indian", "Meals"] },
+  { name: "Cafe 7th Era", emoji: "🍕", rating: "★★★★★", location: "GEU Road", cost: "₹150–300", desc: "Trendy student café with good ambience.", tags: ["near", "cafe", "fast-food", "top"], pills: ["Cafe", "Ambience"] },
+  { name: "Chill Bro Cafe", emoji: "🍟", rating: "★★★★☆", location: "GEU Road", cost: "₹120–250", desc: "Casual hangout spot with modern vibe.", tags: ["near", "cafe", "good"], pills: ["Cafe", "Snacks"] },
+  { name: "Craving Crew Cafe", emoji: "🥪", rating: "★★★★☆", location: "Near University Area", cost: "₹120–250", desc: "Popular for group hangouts and quick meals.", tags: ["near", "cafe", "fast-food", "good"], pills: ["Hangout", "Fast Food"] },
+  { name: "Lime Light Cafe", emoji: "🍝", rating: "★★★★☆", location: "Nearby Market", cost: "₹150–300", desc: "Stylish café with a good variety of food.", tags: ["near", "cafe", "good"], pills: ["Multi-cuisine", "Stylish"] },
+  { name: "Arth Coffee House", emoji: "☕", rating: "★★★★★", location: "Main Road", cost: "₹150–350", desc: "Premium coffee experience with calm ambience.", tags: ["far", "cafe", "top"], pills: ["Coffee", "Premium"] },
+  { name: "Jo Paji Paratha Corner", emoji: "🧈", rating: "★★★★★", location: "Prem Nagar", cost: "₹80–200", desc: "Famous for stuffed parathas and heavy meals.", tags: ["far", "north-indian", "top"], pills: ["Paratha", "North Indian"] },
+  { name: "Bunkhouse Cafe", emoji: "🥗", rating: "★★★★☆", location: "Post Office Road", cost: "₹150–300", desc: "Cozy café with aesthetic interiors.", tags: ["far", "cafe", "good"], pills: ["Continental", "Aesthetic"] },
+  { name: "Annie's Bakery", emoji: "🍰", rating: "★★★★★", location: "Party Junction", cost: "₹100–300", desc: "Known for cakes, pastries, and baked items.", tags: ["far", "cafe", "top"], pills: ["Bakery", "Desserts"] },
+  { name: "Tamanna Cheesecake", emoji: "🧀", rating: "★★★★★", location: "Café Zone", cost: "₹150–350", desc: "Specializes in cheesecakes and dessert items.", tags: ["far", "cafe", "top"], pills: ["Cheesecake", "Desserts"] },
+  { name: "The Waffle Co.", emoji: "🧇", rating: "★★★★☆", location: "Student Market", cost: "₹120–300", desc: "Sweet waffles and chocolate-based treats.", tags: ["far", "cafe", "good"], pills: ["Waffles", "Sweets"] },
+  { name: "Chai Sutta Bar", emoji: "🍵", rating: "★★★★★", location: "Near University", cost: "₹50–150", desc: "Popular chain for chai, snacks, and student hangouts.", tags: ["near", "fast-food", "top"], pills: ["Chai", "Snacks"] },
+  { name: "Gangchen Tibet Kitchen", emoji: "🥟", rating: "★★★★★", location: "Clement Town", cost: "₹150–300", desc: "Famous for authentic momos and thukpa.", tags: ["far", "chinese", "top"], pills: ["Tibetan", "Momos"] }
+];
 
-function initTheme() {
-    // 1. Check if they saved a preference in LocalStorage
-    const savedTheme = localStorage.getItem('geuNexusTheme');
-    const toggleBtn = document.getElementById('themeToggle');
+function renderCafes() {
+  const grid = document.getElementById('cafeGrid');
+  const count = document.getElementById('cafeCount');
+  
+  if (!grid) return;
 
-    if (savedTheme === 'dark') {
-        document.body.classList.add('dark-theme');
-        if (toggleBtn) toggleBtn.innerText = '☀️'; // Change icon to sun
-    } else {
-        document.body.classList.remove('dark-theme');
-        if (toggleBtn) toggleBtn.innerText = '🌙'; // Change icon to moon
-    }
+  if (count) count.innerText = `${cafeDatabase.length} cafes listed`;
+
+  let html = '';
+  cafeDatabase.forEach(cafe => {
+    let pillsHtml = cafe.pills.map(pill => `<span class="tag-pill">${pill}</span>`).join('');
+    
+    html += `
+      <div class="card filterable-card" data-tags="${cafe.tags.join(',')}">
+        <div class="cafe-img">${cafe.emoji}</div>
+        <h3 style="font-size:16px;">${cafe.name}</h3>
+        <div class="stars">${cafe.rating}</div>
+        <div class="cafe-meta">
+          <span>📍 ${cafe.location}</span>
+          <span>💰 ${cafe.cost}</span>
+        </div>
+        <p style="font-size:13px;color:var(--text-muted);margin-bottom:10px;">${cafe.desc}</p>
+        <div>${pillsHtml}</div>
+        <a href="http://googleusercontent.com/maps.google.com/?q=${encodeURIComponent(cafe.name + ' Dehradun')}" target="_blank" class="btn btn-outline" style="width:100%;justify-content:center;margin-top:14px;font-size:13px;">View on Map 📍</a>
+      </div>
+    `;
+  });
+
+  grid.innerHTML = html;
 }
 
-function toggleTheme() {
-    const body = document.body;
-    const toggleBtn = document.getElementById('themeToggle');
-
-    // 2. Flip the switch!
-    body.classList.toggle('dark-theme');
-
-    // 3. Save the choice and update the icon/toast
-    if (body.classList.contains('dark-theme')) {
-        localStorage.setItem('geuNexusTheme', 'dark');
-        if (toggleBtn) toggleBtn.innerText = '☀️';
-        if (typeof showToast === "function") showToast('Dark Mode Enabled 🌙');
-    } else {
-        localStorage.setItem('geuNexusTheme', 'light');
-        if (toggleBtn) toggleBtn.innerText = '🌙';
-        if (typeof showToast === "function") showToast('Light Mode Enabled ☀️');
+// ==========================================
+// 7. INITIALIZATION & PAGE LOAD LOGIC
+// ==========================================
+document.addEventListener('DOMContentLoaded', () => {
+    // 1. Initialize Theme
+    initTheme();
+    
+    // 2. Load PG data if on the PGs page
+    if (typeof loadLivePGs === 'function') {
+        loadLivePGs();
     }
-}
+    
+    // 3. Load Cafe data if on the Cafes page
+    if (typeof renderCafes === 'function') {
+        renderCafes();
+    }
 
-// 4. Run immediately when any page loads so there is no flickering
-document.addEventListener('DOMContentLoaded', initTheme);
+    // 4. Load Lost & Found Grid from LocalStorage
+    const grid = document.getElementById('itemGrid');
+    if (grid) {
+        let savedItems = JSON.parse(localStorage.getItem('geuNexusItems')) || [];
+        savedItems.forEach(item => {
+            grid.insertAdjacentHTML('afterbegin', createCardHTML(item));
+        });
+    }
+
+    // 5. Open the About Us modal automatically once per session/user
+    if (!localStorage.getItem('aboutShown')) {
+        openModal('aboutModal');
+        localStorage.setItem('aboutShown', 'true');
+    }
+});

@@ -102,7 +102,7 @@
       <li><a href="pgs.html">PGs</a></li>
     </ul></div>
     <div class="footer-col"><h4>Campus</h4><ul><li><a href="index.html#announcements">Notices</a></li><li><a href="login.html">Logout</a></li></ul></div>
-    <div class="footer-col"><h4>Contact</h4><ul><li><a href="#">About</a></li><li><a href="#">Feedback</a></li></ul></div>
+    <div class="footer-col"><h4>Contact</h4><ul><li><a href="javascript:openModal('aboutModal')">About</a></li><li><a href="#">Feedback</a></li></ul></div>
   </div>
   <div class="footer-bottom">
     <span>© 2026 GEU Nexus. Built with ❤️ by GEU students.</span>
@@ -111,5 +111,41 @@
 </footer>
 
 <script src="app.js"></script>
+<div id="aboutModal" class="modal" style="display:none; position:fixed; top:0; left:0; width:100%; height:100%; background:rgba(0,0,0,0.5); align-items:center; justify-content:center; z-index:1000;">
+  <div class="modal-content" style="background:var(--surface); padding:24px; border-radius:var(--radius-lg); width:90%; max-width:480px; border:1px solid var(--border); box-shadow:0 10px 25px rgba(0,0,0,0.2);">
+    <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:16px;">
+      <h3 style="font-size:18px; font-family:'Syne', sans-serif;">About GEU Nexus 🎓</h3>
+      <button onclick="closeModal('aboutModal')" style="background:var(--surface2); border:none; width:32px; height:32px; border-radius:50%; cursor:pointer; font-size:16px; color:var(--text);">×</button>
+    </div>
+    
+    <p style="font-size:13px; color:var(--text-muted); line-height:1.5; margin-bottom:12px;">
+      GEU Nexus is an all-in-one student platform designed to connect the Graphic Era University campus community, making campus life, housing, and food discovery easier.
+    </p>
+
+    <div style="background:var(--accent-light); color:var(--accent); font-size:11px; font-weight:600; padding:6px 12px; border-radius:var(--radius-sm); margin-bottom:16px; border:1px solid rgba(var(--accent-rgb), 0.2);">
+      🚀 Developed as part of the Design Thinking Project
+    </div>
+    
+    <div style="font-size: 12px; color: var(--text); margin-bottom: 16px; line-height: 1.6;">
+      <div><strong>Problem Addressed:</strong> Fragmentation of campus information, lost items, and finding local food/amenities.</div>
+      <div style="margin-top: 6px;"><strong>Tech Stack:</strong> HTML5, CSS3, JavaScript (ES6), LocalStorage API, Google Sheets API.</div>
+    </div>
+
+    <h4 style="font-size:13px; margin-bottom:6px; font-weight:700; color:var(--text);">Project Team</h4>
+    <ul style="font-size:12px; color:var(--text-muted); margin-bottom:18px; padding-left:20px; line-height:1.6;">
+      <li>Divyesh Pant (Lead Developer)</li>
+      <li>Ananya Sharma</li>
+      <li>Sarthak Jaiswal</li>
+      <li>Vinayak Lakhera</li>
+      <li>Ashvath Shaily</li>
+    </ul>
+
+    <div style="display:flex; gap:10px;">
+      <a href="https://www.instagram.com/geu_nexus?igsh=MWMzbzMxN2RkOHRjcw==" target="_blank" class="btn btn-primary" style="flex:1; justify-content:center; font-size:12px; padding:10px;">
+        <span style="font-size:14px; margin-right:6px;">📸</span> Follow on Instagram
+      </a>
+    </div>
+  </div>
+</div>
 </body>
 </html>
