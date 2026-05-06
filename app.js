@@ -1,18 +1,31 @@
 // ==========================================
+// 0. SMART AUTH SHIELD & LOGOUT 🛡️
+// ==========================================
+const isLoginPage = window.location.href.includes('login.html');
+
+// If user has no badge, and they are NOT on the login page, kick them to login
+if (!localStorage.getItem('geuNexusAuth') && !isLoginPage) {
+    window.location.replace('login.html');
+}
+
+// Global Logout Handler
+document.addEventListener('click', function(e) {
+    if (e.target.tagName === 'A' && e.target.getAttribute('href') === 'login.html') {
+        localStorage.removeItem('geuNexusAuth');
+    }
+});
+
+// ==========================================
 // 1. UTILITY FUNCTIONS (Modals & Toasts)
 // ==========================================
 function openModal(id) {
     const modal = document.getElementById(id);
-    if (modal) {
-        modal.style.display = 'flex';
-    }
+    if (modal) modal.style.display = 'flex';
 }
 
 function closeModal(id) {
     const modal = document.getElementById(id);
-    if (modal) {
-        modal.style.display = 'none';
-    }
+    if (modal) modal.style.display = 'none';
 }
 
 function showToast(message) {
@@ -39,7 +52,7 @@ function showToast(message) {
 }
 
 // ==========================================
-// 2. DARK MODE LOGIC (Persistent across pages)
+// 2. DARK MODE LOGIC
 // ==========================================
 function initTheme() {
     const savedTheme = localStorage.getItem('geuNexusTheme');
@@ -63,26 +76,23 @@ function toggleTheme() {
     if (body.classList.contains('dark-theme')) {
         localStorage.setItem('geuNexusTheme', 'dark');
         if (toggleBtn) toggleBtn.innerText = '☀️';
-        if (typeof showToast === "function") showToast('Dark Mode Enabled 🌙');
+        showToast('Dark Mode Enabled 🌙');
     } else {
         localStorage.setItem('geuNexusTheme', 'light');
         if (toggleBtn) toggleBtn.innerText = '🌙';
-        if (typeof showToast === "function") showToast('Light Mode Enabled ☀️');
+        showToast('Light Mode Enabled ☀️');
     }
 }
 
 // ==========================================
-// 3. LOST & FOUND (LocalStorage & Handshake)
+// 3. LOST & FOUND (LocalStorage)
 // ==========================================
 function submitReport() {
     const nameInput = document.getElementById('reportName');
     const statusInput = document.getElementById('reportStatus');
     const locationInput = document.getElementById('reportLocation');
 
-    if (!nameInput) {
-        closeModal('reportModal');
-        return;
-    }
+    if (!nameInput) { closeModal('reportModal'); return; }
 
     const name = nameInput.value.trim();
     const status = statusInput.value;
@@ -94,7 +104,6 @@ function submitReport() {
         return;
     }
 
-    // SMART MATCH ALERT
     if (status === "Lost" && name.toLowerCase().includes("black dell laptop")) {
         alert("🚨 SMART MATCH ALERT: A Black Dell Laptop was recently reported as FOUND! Please check the Found board immediately.");
     }
@@ -105,12 +114,10 @@ function submitReport() {
     localStorage.setItem('geuNexusItems', JSON.stringify(savedItems));
 
     const grid = document.getElementById('itemGrid');
-    if (grid) {
-        grid.insertAdjacentHTML('afterbegin', createCardHTML(newItem));
-    }
+    if (grid) grid.insertAdjacentHTML('afterbegin', createCardHTML(newItem));
 
     closeModal('reportModal');
-    showToast('Item saved to database successfully! 📬');
+    showToast('Item saved successfully! 📬');
     
     nameInput.value = ''; statusInput.value = ''; locationInput.value = '';
 }
@@ -137,115 +144,131 @@ function createCardHTML(item) {
     `;
 }
 
-function claimItem(btnElement) {
-    alert("✉️ An OTP has been sent to your registered GEU email address.");
-    let pin = prompt("Enter the 4-digit PIN to verify handover:");
-    if (pin === "1234") {
-        const card = btnElement.closest('.card');
-        const badge = card.querySelector('.badge');
-        badge.className = 'badge badge-found';
-        badge.style.background = '#16A34A'; 
-        badge.style.color = 'white';
-        badge.innerHTML = '✅ Claimed';
-        btnElement.innerHTML = "Handover Verified";
-        btnElement.className = "btn btn-outline";
-        btnElement.style.pointerEvents = "none";
-        btnElement.style.opacity = "0.5";
-        showToast("✅ Verification successful! Item handed over securely.");
-    } else if (pin !== null) {
-        alert("❌ Incorrect PIN. Handover denied for security.");
-    }
-}
-
 // ==========================================
-// 4. MARKETPLACE (Photo Upload & Meetup)
+// 4. LIVE MARKETPLACE (Google Sheets)
 // ==========================================
-let currentUploadedPhoto = null;
+const MARKETPLACE_CSV_URL = "https://docs.google.com/spreadsheets/d/e/2PACX-1vRp1sH0n533NVGCrmx7C3m_6o38XDmzZEd33qnzIABvTHoOQLky3g3yZX2CFzpum2U2pSvF1gI1s4nE/pub?output=csv";
 
-function handlePhotoUpload(input) {
-    const file = input.files[0];
-    if (file) {
-        const reader = new FileReader();
-        reader.onload = function(e) {
-            currentUploadedPhoto = e.target.result; 
-            document.getElementById('photoPreview').innerHTML = `
-                <img src="${currentUploadedPhoto}" style="max-height:120px; border-radius:8px; object-fit:contain;">
-            `;
-        }
-        reader.readAsDataURL(file);
-    }
-}
-
-function submitSmartListing() {
-    const titleInput = document.getElementById('postTitle');
-    const title = titleInput.value.toLowerCase();
-
-    if (!currentUploadedPhoto) {
-        showToast("⚠️ Please upload a photo for your listing!");
-        const uploadBox = document.getElementById('photoPreview').parentElement;
-        uploadBox.style.borderColor = 'var(--danger)';
-        uploadBox.style.background = '#FEF2F2';
-        setTimeout(() => {
-            uploadBox.style.borderColor = 'var(--border)';
-            uploadBox.style.background = 'var(--surface2)';
-        }, 1500);
-        return; 
-    }
-
-    if (title.includes('drafter')) {
-        const wantToMessage = confirm("🚨 SMART MATCH: Wait! Aman from 1st Year just posted an urgent request looking for a Drafter.\n\nWould you like to message him directly instead of posting a new listing?");
-        if (wantToMessage) {
-            closeModal('postModal');
-            showToast("Redirecting to chat with Aman K...");
-            titleInput.value = ''; 
-            return; 
-        }
-    }
-
-    const imageHTML = `<img src="${currentUploadedPhoto}" style="width:100%; height:100%; object-fit:cover; border-radius:8px;">`;
-
-    const newCard = `
-      <div class="card filterable-card" data-tags="sell" style="animation: fadeUp 0.4s ease;">
-        <div class="listing-img" style="padding:0; overflow:hidden;">
-            ${imageHTML}
-        </div>
-        <span class="badge badge-sell" style="margin-bottom:6px;">Just Posted</span>
-        <h3 style="font-size:15px;">${titleInput.value || 'New Item'}</h3>
-        <div class="price-tag">₹ Check Details</div>
-        <p style="font-size:13px;color:var(--text-muted);margin-bottom:10px;">Newly listed item.</p>
-        <p style="font-size:12px;color:var(--text-light);">👤 You</p>
-        <button class="btn btn-primary" style="width:100%;justify-content:center;margin-top:12px;font-size:13px;" onclick="showToast('This is your listing!')">Manage Listing</button>
-      </div>
-    `;
-
+async function loadLiveMarketplace() {
     const grid = document.getElementById('marketGrid');
-    if(grid) grid.insertAdjacentHTML('afterbegin', newCard);
+    const count = document.getElementById('marketCount');
+    if (!grid) return;
 
-    closeModal('postModal');
-    showToast("Listing posted with photo! 🎉");
-    titleInput.value = '';
-    currentUploadedPhoto = null;
-    document.getElementById('photoPreview').innerHTML = `
-        <div style="font-size:28px; margin-bottom:8px;">📸</div>
-        <span style="font-size:13px; color:var(--text-muted);">Click to upload an image of your item</span>
-    `;
+    try {
+        const fetchUrl = MARKETPLACE_CSV_URL + '&t=' + new Date().getTime(); // Cache buster
+        const response = await fetch(fetchUrl);
+        const csvText = await response.text();
+        
+        const rows = csvText.split('\n').map(row => row.split(/,(?=(?:(?:[^"]*"){2})*[^"]*$)/));
+        const dataRows = rows.slice(1).filter(r => r.length > 1);
+
+        if (dataRows.length === 0) {
+            grid.innerHTML = '<div style="grid-column:1/-1;text-align:center;padding:40px;color:var(--text-muted);">No items listed yet! Be the first to post.</div>';
+            if(count) count.innerText = "0 active listings";
+            return;
+        }
+
+        let html = '';
+
+        dataRows.forEach(row => {
+            const clean = (str) => (str || '').replace(/^"|"$/g, '').trim();
+            
+            const fullName = clean(row[1]) || 'Anonymous Student';
+            const title = clean(row[3]) || 'Item';
+            const type = clean(row[4]) || 'For Sale';
+            const condition = clean(row[5]) || 'Brand New';
+            const priceStr = clean(row[6]) || '0';
+            const category = clean(row[8]) || 'other';
+            const desc = clean(row[9]) || '';
+            const contact = clean(row[10]) || '';
+            const imageLink = clean(row[11]) || '';
+            const isMystery = clean(row[12]) && clean(row[12]).toLowerCase().includes('yes');
+
+            const tags = [];
+            let badgeHTML = '';
+            let priceSuffix = '';
+            let displayImg = imageLink ? `<img src="${imageLink}" style="width:100%;height:100%;object-fit:cover;">` : '<div style="font-size: 48px; padding-top: 20px;">📦</div>';
+            let cardBorder = '';
+
+            const typeLower = type.toLowerCase();
+            
+            if (typeLower.includes('bounty') || typeLower.includes('urgent')) {
+                tags.push('bounty');
+                badgeHTML = `<span class="badge badge-request" style="animation: pulse 2s infinite;">🚨 Midnight Bounty</span>`;
+                cardBorder = 'border: 2px solid #FCA5A5; background: #FEF2F2;';
+            } else if (typeLower.includes('bundle')) {
+                tags.push('bundle');
+                badgeHTML = `<span class="badge badge-bundle">📦 Senior Bundle</span>`;
+                cardBorder = 'border: 2px solid #C7D2FE;';
+            } else if (typeLower.includes('rent')) {
+                tags.push('rental');
+                badgeHTML = `<span class="badge" style="background:#FEF3C7; color:#D97706;">⏳ Rental</span>`;
+                priceSuffix = ' <span style="font-size: 13px; font-weight: normal; color: var(--text-muted);">/ day</span>';
+            } else if (typeLower.includes('free') || typeLower.includes('donate')) {
+                tags.push('donate');
+                badgeHTML = `<span class="badge" style="background:#DCFCE7; color:#16A34A;">🎁 Free / Donate</span>`;
+            } else {
+                tags.push('sell');
+                badgeHTML = `<span class="badge badge-sell">🛒 For Sale</span>`;
+            }
+
+            if (isMystery) {
+                tags.push('mystery');
+                badgeHTML += ` <span class="badge" style="background:#E879F9; color:#fff; border: none;">✨ Mystery Item</span>`;
+                displayImg = '<div style="font-size: 56px; padding-top: 20px; text-shadow: 0 4px 10px rgba(0,0,0,0.1);">🎁❓</div>';
+                cardBorder = 'border: 2px dashed #E879F9; background: #FDF4FF;';
+            }
+
+            if (category.toLowerCase().includes('book')) tags.push('books');
+            if (category.toLowerCase().includes('electronic')) tags.push('electronics');
+            if (category.toLowerCase().includes('furnish') || category.toLowerCase().includes('gear')) tags.push('furniture');
+            else tags.push('other');
+
+            if (condition.toLowerCase().includes('new')) tags.push('new');
+            if (condition.toLowerCase().includes('gently') || condition.toLowerCase().includes('lightly')) tags.push('lightly');
+            if (condition.toLowerCase().includes('heavily')) tags.push('heavily');
+
+            let priceHTML = `₹ ${priceStr}${priceSuffix}`;
+            if (parseInt(priceStr, 10) === 0 || typeLower.includes('donate')) {
+                priceHTML = `<span style="color:var(--success);">Free</span>`;
+            }
+
+            html += `
+              <div class="card filterable-card" data-tags="${tags.join(' ')}" style="${cardBorder}">
+                <div class="listing-img" style="overflow: hidden; padding: 0;">
+                  ${displayImg}
+                </div>
+                <div style="margin-bottom: 8px;">${badgeHTML}</div>
+                <h3 style="font-size:15px; margin-bottom: 4px;">${isMystery ? "Mystery Box: Take a guess!" : title}</h3>
+                <div class="price-tag">${priceHTML}</div>
+                <p style="font-size:13px;color:var(--text-muted);margin-bottom:10px;">${desc}</p>
+                <p style="font-size:12px;color:var(--text-light);">👤 ${fullName}</p>
+                <div style="display:flex; gap: 8px; margin-top: 12px;">
+                  <a href="https://wa.me/91${contact}?text=Hi, I saw your listing for '${title}' on GEU Nexus. Is it still available?" target="_blank" class="btn btn-primary" style="flex: 1; justify-content: center; font-size: 13px; background: #25D366; color: white; border: none;">💬 WhatsApp</a>
+                </div>
+              </div>
+            `;
+        });
+        
+        grid.innerHTML = html;
+        if(count) count.innerText = `${dataRows.length} active listings`;
+    } catch (e) {
+        console.error("Failed to load marketplace data:", e);
+        grid.innerHTML = '<div style="grid-column:1/-1;text-align:center;padding:40px;color:red;">❌ Failed to load live marketplace data. Check your Google Sheet URL.</div>';
+    }
 }
 
-function openMeetup(sellerName, itemName) {
-    document.getElementById('meetupSellerName').innerText = sellerName;
-    document.getElementById('meetupDate').valueAsDate = new Date();
-    document.getElementById('meetupTime').value = "16:00"; 
-    openModal('meetupModal');
-}
-
-function sendMeetupInvite() {
-    const loc = document.getElementById('meetupLocation').value;
-    closeModal('meetupModal');
-    alert(`✅ Secure Invite Sent!\n\nYou requested to meet at ${loc}. We will notify you once the seller confirms the time!`);
+function filterMarketplace() {
+    const input = document.getElementById('marketSearch').value.toLowerCase();
+    const cards = document.querySelectorAll('.filterable-card');
+    cards.forEach(card => {
+        const text = card.innerText.toLowerCase();
+        card.style.display = text.includes(input) ? 'block' : 'none';
+    });
 }
 
 // ==========================================
-// 5. PG LISTINGS (Live Google Sheet Fetch)
+// 5. LIVE PG LISTINGS (Google Sheets)
 // ==========================================
 const PG_SHEET_CSV_URL = "https://docs.google.com/spreadsheets/d/e/2PACX-1vTlG_rrgZHXR_ZFpWfD5mIM95QeIYTB7vN8A23F6ibmPPR6AZ9iAm4W5T0VZl2zDfGlDkN3ESTNdqW-/pub?output=csv";
 
@@ -255,16 +278,14 @@ async function loadLivePGs() {
     if (!grid) return;
 
     try {
-        const response = await fetch(PG_SHEET_CSV_URL);
+        const response = await fetch(PG_SHEET_CSV_URL + '&t=' + new Date().getTime());
         const csvText = await response.text();
         const rows = csvText.split('\n').map(row => row.split(/,(?=(?:(?:[^"]*"){2})*[^"]*$)/));
         const dataRows = rows.slice(1).filter(r => r.length > 1);
 
         let html = '';
-        
         dataRows.forEach(row => {
             const clean = (str) => (str || '').replace(/^"|"$/g, '').trim();
-            
             const name = clean(row[1]) || 'Unnamed PG';
             const genderType = clean(row[2]) || 'Co-ed';
             const rentStr = clean(row[3]) || '0';
@@ -274,10 +295,8 @@ async function loadLivePGs() {
             const contact = clean(row[7]) || 'DM for details';
 
             const rent = parseInt(rentStr.replace(/[^0-9]/g, ''), 10) || 0;
-
             const tags = [];
-            let genderClass = 'coed';
-            let genderLabel = 'Co-ed';
+            let genderClass = 'coed'; let genderLabel = 'Co-ed';
             if (genderType.toLowerCase().includes('boy')) { tags.push('boys'); genderClass = 'boys'; genderLabel = 'Boys'; }
             else if (genderType.toLowerCase().includes('girl')) { tags.push('girls'); genderClass = 'girls'; genderLabel = 'Girls'; }
             else { tags.push('coed'); }
@@ -291,13 +310,9 @@ async function loadLivePGs() {
             if (am.includes('wifi')) { tags.push('wifi'); amenityPills.push('📶 WiFi'); }
             if (am.includes('meal')) { tags.push('meals'); amenityPills.push('🍽 Meals'); }
             if (am.includes('ac')) { tags.push('ac'); amenityPills.push('❄️ AC'); }
-            if (am.includes('laundry')) { tags.push('laundry'); amenityPills.push('🧺 Laundry'); }
-            if (am.includes('parking')) { tags.push('parking'); amenityPills.push('🅿 Parking'); }
-            if (am.includes('gym')) { tags.push('gym'); amenityPills.push('🏋️ Gym'); }
 
             const pillsHtml = amenityPills.map(p => `<span class="amenity-tag">${p}</span>`).join('');
-            const icons = ['🏡', '🏘️', '🏠', '🏢'];
-            const icon = icons[name.length % icons.length];
+            const icon = ['🏡', '🏘️', '🏠', '🏢'][name.length % 4];
 
             html += `
               <div class="card filterable-card" data-tags="${tags.join(',')}">
@@ -310,47 +325,31 @@ async function loadLivePGs() {
                 <p style="font-size:12px;color:var(--text-muted);margin-bottom:8px;">📍 ${location}</p>
                 <p style="font-size:13px;color:var(--text-muted);margin-bottom:10px;">${desc}</p>
                 <div>${pillsHtml}</div>
-                <button class="btn btn-primary" style="width:100%;justify-content:center;margin-top:14px;font-size:13px;" onclick="showToast('Contact Owner: ${contact.replace(/'/g, "\\'")}')">Contact Owner</button>
+                <div style="display:flex; gap: 8px; margin-top: 14px;">
+                  <a href="https://wa.me/91${contact}?text=Hi, I saw your PG '${name}' on GEU Nexus. Is there a room available?" target="_blank" class="btn btn-primary" style="flex: 1; justify-content: center; font-size: 13px; background: #25D366; color: white; border: none;">💬 WhatsApp</a>
+                </div>
               </div>
             `;
         });
-
         grid.innerHTML = html;
         if(count) count.innerText = `${dataRows.length} PGs listed`;
-    } catch (error) {
-        console.error("Error loading PGs:", error);
-        grid.innerHTML = '<div style="grid-column:1/-1;text-align:center;padding:40px;color:red;">❌ Failed to load live PG data. Ensure your Google Sheet is Published to the Web!</div>';
-    }
+    } catch (error) { grid.innerHTML = '<div style="color:red;text-align:center;padding:40px;">❌ Failed to load PG data.</div>'; }
 }
 
 // ==========================================
-// 6. CAFE DIRECTORY (PRE-LOADED GEU SPOTS)
+// 6. CAFE DIRECTORY
 // ==========================================
-const cafeDatabase = [
+let cafeDatabase = [
   { name: "Ravi Canteen", emoji: "☕", rating: "★★★★★", location: "Inside Campus", cost: "₹40–120", desc: "Popular for Maggi, samosa, and chai between lectures.", tags: ["walking", "fast-food", "top"], pills: ["Fast Food", "Snacks"] },
-  { name: "Quick Bite Café", emoji: "🧋", rating: "★★★★☆", location: "Inside Campus", cost: "₹60–150", desc: "Quick snacks and cold coffee; ideal for short breaks.", tags: ["walking", "fast-food", "cafe", "good"], pills: ["Fast Food", "Beverages"] },
-  { name: "Happiness Hut", emoji: "🍩", rating: "★★★★★", location: "Inside Campus", cost: "₹80–200", desc: "Known for shakes, desserts, and relaxed hangout vibe.", tags: ["walking", "cafe", "top"], pills: ["Desserts", "Beverages"] },
-  { name: "Main Food Court", emoji: "🍱", rating: "★★★★☆", location: "Inside Campus", cost: "₹70–180", desc: "Multiple options for full meals within campus.", tags: ["walking", "north-indian", "fast-food", "good"], pills: ["North Indian", "Meals"] },
-  { name: "Gupta Burger", emoji: "🍔", rating: "★★★★★", location: "Near GEU Main Gate", cost: "₹50–120", desc: "Budget-friendly burgers and fries; highly popular among students.", tags: ["near", "fast-food", "top"], pills: ["Street Food", "Burgers"] },
-  { name: "Gupta's Cafe & Restaurant", emoji: "🍛", rating: "★★★★☆", location: "Opp. GEU Main Gate", cost: "₹120–250", desc: "Good for proper meals with quick service.", tags: ["near", "north-indian", "good"], pills: ["North Indian", "Meals"] },
-  { name: "Cafe 7th Era", emoji: "🍕", rating: "★★★★★", location: "GEU Road", cost: "₹150–300", desc: "Trendy student café with good ambience.", tags: ["near", "cafe", "fast-food", "top"], pills: ["Cafe", "Ambience"] },
-  { name: "Chill Bro Cafe", emoji: "🍟", rating: "★★★★☆", location: "GEU Road", cost: "₹120–250", desc: "Casual hangout spot with modern vibe.", tags: ["near", "cafe", "good"], pills: ["Cafe", "Snacks"] },
-  { name: "Craving Crew Cafe", emoji: "🥪", rating: "★★★★☆", location: "Near University Area", cost: "₹120–250", desc: "Popular for group hangouts and quick meals.", tags: ["near", "cafe", "fast-food", "good"], pills: ["Hangout", "Fast Food"] },
-  { name: "Lime Light Cafe", emoji: "🍝", rating: "★★★★☆", location: "Nearby Market", cost: "₹150–300", desc: "Stylish café with a good variety of food.", tags: ["near", "cafe", "good"], pills: ["Multi-cuisine", "Stylish"] },
-  { name: "Arth Coffee House", emoji: "☕", rating: "★★★★★", location: "Main Road", cost: "₹150–350", desc: "Premium coffee experience with calm ambience.", tags: ["far", "cafe", "top"], pills: ["Coffee", "Premium"] },
-  { name: "Jo Paji Paratha Corner", emoji: "🧈", rating: "★★★★★", location: "Prem Nagar", cost: "₹80–200", desc: "Famous for stuffed parathas and heavy meals.", tags: ["far", "north-indian", "top"], pills: ["Paratha", "North Indian"] },
-  { name: "Bunkhouse Cafe", emoji: "🥗", rating: "★★★★☆", location: "Post Office Road", cost: "₹150–300", desc: "Cozy café with aesthetic interiors.", tags: ["far", "cafe", "good"], pills: ["Continental", "Aesthetic"] },
-  { name: "Annie's Bakery", emoji: "🍰", rating: "★★★★★", location: "Party Junction", cost: "₹100–300", desc: "Known for cakes, pastries, and baked items.", tags: ["far", "cafe", "top"], pills: ["Bakery", "Desserts"] },
-  { name: "Tamanna Cheesecake", emoji: "🧀", rating: "★★★★★", location: "Café Zone", cost: "₹150–350", desc: "Specializes in cheesecakes and dessert items.", tags: ["far", "cafe", "top"], pills: ["Cheesecake", "Desserts"] },
-  { name: "The Waffle Co.", emoji: "🧇", rating: "★★★★☆", location: "Student Market", cost: "₹120–300", desc: "Sweet waffles and chocolate-based treats.", tags: ["far", "cafe", "good"], pills: ["Waffles", "Sweets"] },
-  { name: "Chai Sutta Bar", emoji: "🍵", rating: "★★★★★", location: "Near University", cost: "₹50–150", desc: "Popular chain for chai, snacks, and student hangouts.", tags: ["near", "fast-food", "top"], pills: ["Chai", "Snacks"] },
-  { name: "Gangchen Tibet Kitchen", emoji: "🥟", rating: "★★★★★", location: "Clement Town", cost: "₹150–300", desc: "Famous for authentic momos and thukpa.", tags: ["far", "chinese", "top"], pills: ["Tibetan", "Momos"] }
+  { name: "Quick Bite Café", emoji: "🧋", rating: "★★★★☆", location: "Inside Campus", cost: "₹60–150", desc: "Quick snacks and cold coffee.", tags: ["walking", "fast-food", "cafe", "good"], pills: ["Fast Food", "Beverages"] },
+  { name: "Happiness Hut", emoji: "🍩", rating: "★★★★★", location: "Inside Campus", cost: "₹80–200", desc: "Known for shakes and relaxed hangout vibe.", tags: ["walking", "cafe", "top"], pills: ["Desserts", "Beverages"] },
+  { name: "Gupta Burger", emoji: "🍔", rating: "★★★★★", location: "Near GEU Main Gate", cost: "₹50–120", desc: "Budget-friendly burgers and fries.", tags: ["near", "fast-food", "top"], pills: ["Street Food", "Burgers"] },
+  { name: "Cafe 7th Era", emoji: "🍕", rating: "★★★★★", location: "GEU Road", cost: "₹150–300", desc: "Trendy student café with good ambience.", tags: ["near", "cafe", "fast-food", "top"], pills: ["Cafe", "Ambience"] }
 ];
 
 function renderCafes() {
   const grid = document.getElementById('cafeGrid');
   const count = document.getElementById('cafeCount');
-  
   if (!grid) return;
 
   if (count) count.innerText = `${cafeDatabase.length} cafes listed`;
@@ -379,34 +378,54 @@ function renderCafes() {
 }
 
 // ==========================================
-// 7. INITIALIZATION & PAGE LOAD LOGIC
+// 7. FILTER SECTIONS
+// ==========================================
+function filterCards() {
+    const cards = document.querySelectorAll('.filterable-card');
+    const selectedRadios = document.querySelectorAll('.filter-radio:checked');
+    const selectedCbs = document.querySelectorAll('.filter-cb:checked');
+
+    cards.forEach(card => {
+        let show = true;
+        const tags = (card.getAttribute('data-tags') || '').toLowerCase().replace(/,/g, ' ');
+
+        selectedRadios.forEach(radio => {
+            if (radio.value !== 'all') {
+                const tagsArray = tags.split(/\s+/);
+                if (!tagsArray.includes(radio.value.toLowerCase())) show = false;
+            }
+        });
+
+        selectedCbs.forEach(cb => {
+            const tagsArray = tags.split(/\s+/);
+            if (!tagsArray.includes(cb.value.toLowerCase())) show = false;
+        });
+
+        card.style.display = show ? 'block' : 'none';
+    });
+}
+
+// ==========================================
+// 8. INITIALIZATION ON LOAD
 // ==========================================
 document.addEventListener('DOMContentLoaded', () => {
-    // 1. Initialize Theme
     initTheme();
-    
-    // 2. Load PG data if on the PGs page
-    if (typeof loadLivePGs === 'function') {
-        loadLivePGs();
-    }
-    
-    // 3. Load Cafe data if on the Cafes page
-    if (typeof renderCafes === 'function') {
-        renderCafes();
-    }
 
-    // 4. Load Lost & Found Grid from LocalStorage
+    if (typeof loadLivePGs === 'function' && document.getElementById('pgGrid')) loadLivePGs();
+    if (typeof loadLiveMarketplace === 'function' && document.getElementById('marketGrid')) loadLiveMarketplace();
+    if (document.getElementById('cafeGrid')) renderCafes();
+
     const grid = document.getElementById('itemGrid');
     if (grid) {
         let savedItems = JSON.parse(localStorage.getItem('geuNexusItems')) || [];
-        savedItems.forEach(item => {
-            grid.insertAdjacentHTML('afterbegin', createCardHTML(item));
-        });
+        savedItems.forEach(item => grid.insertAdjacentHTML('afterbegin', createCardHTML(item)));
     }
 
-    // 5. Open the About Us modal automatically once per session/user
-    if (!localStorage.getItem('aboutShown')) {
+    if (!localStorage.getItem('aboutShown') && document.getElementById('aboutModal')) {
         openModal('aboutModal');
         localStorage.setItem('aboutShown', 'true');
     }
+
+    const filterInputs = document.querySelectorAll('.filter-radio, .filter-cb');
+    filterInputs.forEach(input => input.addEventListener('change', filterCards));
 });

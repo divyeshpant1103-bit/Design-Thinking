@@ -9,14 +9,12 @@
         @import url('https://fonts.googleapis.com/css2?family=DM+Sans:wght@400;500;600;700&family=Syne:wght@600;700;800&display=swap');
 
         :root {
-            --bg-color: #070d1a; /* Deep Navy */
+            --bg-color: #070d1a; 
             --font-main: 'DM Sans', sans-serif;
             --font-display: 'Syne', sans-serif;
-            
-            /* GEU Gold Theme Variables */
             --theme-color: #C9A84C; 
             --theme-glow-rgb: 201, 168, 76;
-            --shade-color: #1B3A7A; /* Navy Shade */
+            --shade-color: #1B3A7A; 
             --bulb-color: #FFF9E6;
             --light-opacity: 0.15;
             --face-awake: 1;
@@ -259,7 +257,7 @@
                         <span class="status-dot"></span> PORTAL ACTIVE
                     </div>
 
-                    <form onsubmit="event.preventDefault(); window.location.href='index.html';">
+                    <form onsubmit="handleLogin(event)">
                         <div class="input-group">
                             <label>University Email</label>
                             <div class="input-wrapper">
@@ -291,7 +289,7 @@
                         <span class="status-dot"></span> SECURE CONNECTION
                     </div>
 
-                    <form onsubmit="event.preventDefault(); window.location.href='index.html';">
+                    <form onsubmit="handleLogin(event)">
                         <div class="input-group">
                             <label>Full Name</label>
                             <input type="text" placeholder="Enter your full name" required>
@@ -335,10 +333,10 @@
         }
 
         const themes = [
-            { themeColor: "#C9A84C", themeGlowRGB: "201, 168, 76", shadeColor: "#1B3A7A", bulbColor: "#FFF9E6", lightOpacity: "0.15", faceAwake: "1", faceSleep: "0" }, // GEU Gold
-            { themeColor: "#8ab4f8", themeGlowRGB: "138, 180, 248", shadeColor: "#1B3A7A", bulbColor: "#e8f0fe", lightOpacity: "0.15", faceAwake: "1", faceSleep: "0" }, // Soft Blue
-            { themeColor: "#e8eaed", themeGlowRGB: "232, 234, 237", shadeColor: "#1B3A7A", bulbColor: "#ffffff", lightOpacity: "0.15", faceAwake: "1", faceSleep: "0" }, // Silver
-            { themeColor: "#1e293b", themeGlowRGB: "0, 0, 0", shadeColor: "#0f172a", bulbColor: "#020617", lightOpacity: "0", faceAwake: "0", faceSleep: "1" } // Lights Off
+            { themeColor: "#C9A84C", themeGlowRGB: "201, 168, 76", shadeColor: "#1B3A7A", bulbColor: "#FFF9E6", lightOpacity: "0.15", faceAwake: "1", faceSleep: "0" }, 
+            { themeColor: "#8ab4f8", themeGlowRGB: "138, 180, 248", shadeColor: "#1B3A7A", bulbColor: "#e8f0fe", lightOpacity: "0.15", faceAwake: "1", faceSleep: "0" }, 
+            { themeColor: "#e8eaed", themeGlowRGB: "232, 234, 237", shadeColor: "#1B3A7A", bulbColor: "#ffffff", lightOpacity: "0.15", faceAwake: "1", faceSleep: "0" }, 
+            { themeColor: "#1e293b", themeGlowRGB: "0, 0, 0", shadeColor: "#0f172a", bulbColor: "#020617", lightOpacity: "0", faceAwake: "0", faceSleep: "1" } 
         ];
 
         let currentThemeIndex = 0;
@@ -359,6 +357,21 @@
             rootStyles.setProperty('--light-opacity', config.lightOpacity);
             rootStyles.setProperty('--face-awake', config.faceAwake);
             rootStyles.setProperty('--face-sleep', config.faceSleep);
+        }
+
+        // --- NEW LOGIN HANDLER SCRIPT ---
+        function handleLogin(event) {
+            event.preventDefault(); 
+            localStorage.setItem('geuNexusAuth', 'true'); // Gives the user a digital badge
+            
+            const btn = event.target.querySelector('.auth-btn');
+            const originalText = btn.innerText;
+            btn.innerText = "Authenticating...";
+            btn.style.opacity = "0.8";
+
+            setTimeout(() => {
+                window.location.href = 'index.html'; // Teleports to homepage
+            }, 800);
         }
     </script>
     <script src="app.js"></script>

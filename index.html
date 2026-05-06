@@ -6,178 +6,138 @@
   <title>GEU Nexus — Your Campus, Connected</title>
   <link rel="stylesheet" href="style.css" />
   <style>
-    /* ── HERO ── */
-    .hero {
-      background: var(--surface);
-      border-bottom: 2px solid var(--gold);
-      padding: 80px 24px 72px;
+    /* --- HOME PAGE SECTIONS --- */
+    .hero-section {
       text-align: center;
+      padding: 80px 20px 60px;
+      background: radial-gradient(circle at top, var(--surface2), var(--bg));
+      border-bottom: 1px solid var(--border);
       position: relative;
       overflow: hidden;
     }
-    .hero::before {
-      content: '';
-      position: absolute; inset: 0;
-      background: radial-gradient(ellipse 70% 60% at 50% -10%, rgba(27,58,122,0.06), transparent);
-    }
-    .hero-eyebrow {
-      display: inline-flex; align-items: center; gap: 6px;
-      background: var(--gold-light);
-      color: var(--gold-dark);
-      font-size: 12px; font-weight: 700;
-      letter-spacing: 0.08em; text-transform: uppercase;
-      padding: 5px 14px; border-radius: 100px;
-      margin-bottom: 20px;
-      border: 1px solid rgba(201,168,76,0.3);
-    }
-    .hero h1 {
-      font-size: clamp(36px, 6vw, 64px);
-      color: var(--accent);
-      max-width: 700px; margin: 0 auto 16px;
-    }
-    .hero h1 span { color: var(--gold-dark); }
-    .hero p {
-      font-size: 17px; color: var(--text-muted);
-      max-width: 480px; margin: 0 auto 36px;
-      line-height: 1.7;
+
+    .hero-title {
+      font-family: 'Syne', sans-serif;
+      font-size: clamp(36px, 6vw, 56px);
+      font-weight: 800;
+      line-height: 1.2;
+      margin-bottom: 16px;
+      background: linear-gradient(135deg, var(--accent), #f472b6);
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
     }
 
-    /* Search bar */
-    .hero-search {
-      position: relative; max-width: 580px; margin: 0 auto 28px;
-    }
-    .hero-search input {
-      width: 100%;
-      padding: 16px 56px 16px 20px;
-      border: 1.5px solid var(--border);
-      border-radius: 100px;
-      font-family: 'DM Sans', sans-serif;
-      font-size: 15px; color: var(--text);
-      background: white;
-      outline: none;
-      box-shadow: 0 4px 20px rgba(0,0,0,0.06);
-      transition: border-color var(--transition), box-shadow var(--transition);
-    }
-    .hero-search input:focus {
-      border-color: var(--gold);
-      box-shadow: 0 4px 20px rgba(201,168,76,0.15);
-    }
-    .hero-search button {
-      position: absolute; right: 6px; top: 50%;
-      transform: translateY(-50%);
-      background: var(--accent); color: white;
-      border: none; border-radius: 100px;
-      width: 44px; height: 44px;
-      display: flex; align-items: center; justify-content: center;
-      cursor: pointer; font-size: 18px;
-      transition: all var(--transition);
-    }
-    .hero-search button:hover { background: var(--accent-dark); }
-
-    .search-results {
-      position: absolute; top: calc(100% + 8px); left: 0; right: 0;
-      background: white; border: 1px solid var(--border);
-      border-radius: var(--radius); box-shadow: var(--shadow-md);
-      max-height: 280px; overflow-y: auto;
-      display: none; text-align: left;
-      z-index: 10;
-    }
-    .search-results.open { display: block; }
-    .search-item {
-      display: flex; align-items: center; gap: 12px;
-      padding: 12px 16px; font-size: 14px;
-      cursor: pointer; transition: background var(--transition);
-      border-bottom: 1px solid var(--border);
-    }
-    .search-item:last-child { border-bottom: none; }
-    .search-item:hover { background: var(--bg); }
-    .search-item .si-cat {
-      font-size: 11px; font-weight: 600;
-      color: var(--accent); letter-spacing: 0.06em;
-      text-transform: uppercase; min-width: 70px;
-    }
-    .search-item .si-name { font-weight: 500; }
-    .search-item .si-sub { color: var(--text-muted); font-size: 12px; }
-
-    /* Quick tiles */
-    .quick-tiles {
-      max-width: 900px; margin: 0 auto;
-      display: grid; grid-template-columns: repeat(4, 1fr); gap: 12px;
-    }
-    .quick-tile {
-      background: var(--bg);
-      border: 1.5px solid var(--border);
-      border-radius: var(--radius);
-      padding: 18px 14px;
-      text-align: center; cursor: pointer;
-      transition: all var(--transition);
-      text-decoration: none; color: inherit;
-      display: block;
-    }
-    .quick-tile:hover {
-      background: white; border-color: var(--gold);
-      box-shadow: 0 4px 16px rgba(201,168,76,0.15);
-      transform: translateY(-2px);
-    }
-    .quick-tile .icon { font-size: 26px; margin-bottom: 8px; }
-    .quick-tile .label { font-size: 13px; font-weight: 600; color: var(--text); }
-    .quick-tile .sublabel { font-size: 11px; color: var(--text-muted); margin-top: 2px; }
-
-    /* ── SECTION ── */
-    .home-sections {
-      max-width: 1100px; margin: 0 auto;
-      padding: 60px 24px;
-      display: grid; grid-template-columns: 1fr 1fr; gap: 40px;
+    .hero-subtitle {
+      font-size: 18px;
+      color: var(--text-muted);
+      max-width: 650px;
+      margin: 0 auto 30px;
+      line-height: 1.6;
     }
 
-    /* Announcements */
-    .announce-card {
+    /* Bento Grid (Features) */
+    .bento-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+      gap: 20px;
+      padding: 40px 0;
+    }
+
+    .bento-card {
       background: var(--surface);
       border: 1px solid var(--border);
-      border-radius: var(--radius);
-      padding: 16px 18px;
-      display: flex; gap: 14px;
-      align-items: flex-start;
-      transition: all var(--transition);
+      border-radius: 24px;
+      padding: 30px;
+      transition: all 0.3s cubic-bezier(0.25, 0.8, 0.25, 1);
+      text-decoration: none;
+      color: var(--text);
+      display: flex;
+      flex-direction: column;
+      position: relative;
+      overflow: hidden;
     }
-    .announce-card:hover { box-shadow: var(--shadow); }
-    .announce-dot {
-      width: 8px; height: 8px; border-radius: 50%;
-      background: var(--gold); flex-shrink: 0; margin-top: 7px;
+
+    .bento-card:hover {
+      transform: translateY(-5px);
+      box-shadow: 0 15px 30px rgba(0,0,0,0.08);
+      border-color: var(--accent);
     }
-    .announce-card h4 { font-size: 15px; margin-bottom: 4px; }
-    .announce-card p { font-size: 13px; color: var(--text-muted); line-height: 1.6; }
-    .announce-card .date { font-size: 11px; color: var(--text-light); margin-top: 6px; font-weight: 500; }
 
+    .bento-icon {
+      font-size: 48px;
+      margin-bottom: 16px;
+      display: inline-block;
+      transition: transform 0.3s ease;
+    }
 
-    .profile-card.show { display: block; }
-    .profile-avatar {
-      width: 52px; height: 52px; border-radius: 50%;
-      background: var(--accent);
-      display: flex; align-items: center; justify-content: center;
-      color: var(--gold); font-size: 20px; font-weight: 700;
-      margin-bottom: 12px;
+    .bento-card:hover .bento-icon {
+      transform: scale(1.1) rotate(-5deg);
+    }
+
+    .bento-card h3 {
+      font-size: 20px;
+      margin-bottom: 8px;
       font-family: 'Syne', sans-serif;
-      border: 2px solid var(--gold);
-    }
-    .profile-card h3 { font-size: 16px; }
-    .profile-card .meta { font-size: 13px; color: var(--text-muted); margin-top: 4px; line-height: 1.6; }
-    .profile-card .logout {
-      margin-top: 14px; font-size: 13px; color: var(--danger);
-      cursor: pointer; font-weight: 600;
     }
 
-    @media (max-width: 768px) {
-      .quick-tiles { grid-template-columns: repeat(2, 1fr); }
-      .home-sections { grid-template-columns: 1fr; padding: 32px 16px; }
+    .bento-card p {
+      font-size: 14px;
+      color: var(--text-muted);
+      line-height: 1.5;
+    }
+
+    /* Animated Notice Marquee */
+    .notice-marquee {
+      background: var(--accent);
+      color: white;
+      padding: 10px 0;
+      overflow: hidden;
+      white-space: nowrap;
+      display: flex;
+      align-items: center;
+      font-size: 14px;
+      font-weight: 600;
+    }
+
+    .notice-content {
+      display: inline-block;
+      padding-left: 100%;
+      animation: marquee 25s linear infinite;
+    }
+
+    @keyframes marquee {
+      0% { transform: translate(0, 0); }
+      100% { transform: translate(-100%, 0); }
+    }
+
+    /* Make the Marketplace card span 2 columns on wide screens */
+    @media (min-width: 768px) {
+      .bento-card.large {
+        grid-column: span 2;
+        flex-direction: row;
+        align-items: center;
+        gap: 30px;
+      }
+      .bento-card.large .bento-icon { font-size: 80px; margin-bottom: 0; }
     }
   </style>
 </head>
 <body>
 
-<!-- NAVBAR -->
+<div class="notice-marquee">
+  <div class="notice-content">
+    🚨 END-Semester Exam Schedule Released on ERP 📅 Hackathon 2026 Registrations Open 📚 Library Timings Extended to 10 PM 🚌 New Shuttle Route Added for Dehradun Central
+  </div>
+</div>
+
 <nav class="navbar">
-  <a href="index.html" class="nav-logo"><img src="logo.png" alt="GEU Nexus Logo"><div class="nav-logo-text"><span class="name">GEU Nexus</span><span class="sub">Innovation &amp; Excellence</span></div></a>
+  <a href="index.html" class="nav-logo">
+    <img src="logo.png" alt="GEU Nexus Logo" onerror="this.style.display='none'">
+    <div class="nav-logo-text">
+      <span class="name">GEU Nexus</span>
+      <span class="sub">Innovation & Excellence</span>
+    </div>
+  </a>
   <ul class="nav-links" id="navLinks">
     <li><a href="index.html" class="active">Home</a></li>
     <li><a href="lost-found.html">Lost & Found</a></li>
@@ -186,132 +146,156 @@
     <li><a href="pgs.html">PGs</a></li>
     <li><a href="#announcements">Notices</a></li>
   </ul>
- <div class="nav-right" style="display: flex; align-items: center; gap: 8px;">
+  <div class="nav-right" style="display: flex; align-items: center; gap: 8px;">
     <button id="themeToggle" class="theme-toggle" onclick="toggleTheme()" title="Toggle Dark Mode">🌙</button>
-    
     <a href="login.html" class="btn btn-outline">Logout</a>
     <button class="hamburger" id="hamburger"><span></span><span></span><span></span></button>
   </div>
 </nav>
 
-<!-- HERO -->
-<section class="hero">
-  <img src="logo.png" alt="GEU Nexus" class="fade-up" style="height:110px;width:110px;object-fit:contain;border-radius:50%;border:3px solid var(--gold);box-shadow:0 8px 32px rgba(201,168,76,0.25);margin-bottom:20px;background:white;">
-  <div class="hero-eyebrow">🎓 Graphic Era University</div>
-  <h1 class="fade-up">Your Campus,<br><span>Connected.</span></h1>
-  <p class="fade-up delay-1">Lost something? Need to sell your old books? Looking for a PG nearby? GEU Nexus has it all — built for students, by students.</p>
-
-  <div class="hero-search fade-up delay-2">
-    <input type="text" id="heroSearch" placeholder="Search lost items, listings, cafes, PGs..." autocomplete="off" />
-    <button onclick="doSearch()">→</button>
-    <div class="search-results" id="searchResults"></div>
+<header class="hero-section">
+  <h1 class="hero-title">🎓 Graphic Era University</h1>
+  <p class="hero-subtitle"><b>Your Campus, Connected.</b><br>Lost something? Need to sell your old books? Looking for a PG nearby? GEU Nexus has it all — built for students, by students.</p>
+  
+  <div style="display: flex; justify-content: center; gap: 12px; flex-wrap: wrap;">
+    <a href="marketplace.html" class="btn btn-primary" style="font-size: 16px; padding: 12px 24px;">🛒 Explore Marketplace</a>
+    <a href="lost-found.html" class="btn btn-outline" style="font-size: 16px; padding: 12px 24px;">🔍 Report Lost Item</a>
   </div>
+</header>
 
-  <div class="quick-tiles fade-up delay-3">
-    <a href="lost-found.html" class="quick-tile">
-      <div class="icon">🔍</div>
-      <div class="label">Lost & Found</div>
-      <div class="sublabel">Report or find items</div>
-    </a>
-    <a href="marketplace.html" class="quick-tile">
-      <div class="icon">🛒</div>
-      <div class="label">Buy / Sell / Donate</div>
-      <div class="sublabel">Campus marketplace</div>
-    </a>
-    <a href="cafes.html" class="quick-tile">
-      <div class="icon">☕</div>
-      <div class="label">Nearby Cafes</div>
-      <div class="sublabel">Food spots around GEU</div>
-    </a>
-    <a href="pgs.html" class="quick-tile">
-      <div class="icon">🏠</div>
-      <div class="label">PG Listings</div>
-      <div class="sublabel">Find accommodation</div>
-    </a>
+<section style="max-width: 1100px; margin: 40px auto 0; padding: 0 20px;">
+  <div style="background: var(--surface); border: 1px solid var(--border); border-radius: 24px; padding: 32px; box-shadow: 0 4px 20px rgba(0,0,0,0.03);">
+    <div style="display: flex; flex-direction: column; gap: 16px;">
+      <span style="background: var(--accent-light); color: var(--accent); font-size: 11px; font-weight: 700; padding: 4px 12px; border-radius: var(--radius-sm); width: fit-content; text-transform: uppercase; letter-spacing: 0.05em;">
+        About the Platform
+      </span>
+      <h2 style="font-family: 'Syne', sans-serif; font-size: 24px;">Welcome to GEU Nexus 🎓</h2>
+      <p style="font-size: 14px; color: var(--text-muted); line-height: 1.6; max-width: 800px;">
+        GEU Nexus is an all-in-one student-built hub created to connect the Graphic Era University campus community. Whether it's finding lost items, searching for verified PGs, discovering local cafes, or getting affordable gear via the marketplace, Nexus makes campus life significantly easier.
+      </p>
+      
+      <div style="display: flex; gap: 24px; flex-wrap: wrap; margin-top: 8px; font-size: 12px; color: var(--text-light); font-weight: 500;">
+        <span>🚀 Developed for the Design Thinking Project</span>
+        <span>•</span>
+        <span>👥 Open Source & Built by Students</span>
+      </div>
+    </div>
   </div>
 </section>
 
-<!-- MAIN CONTENT -->
-<div class="home-sections">
+<div class="page-wrap" style="padding-top: 20px;">
+  <main class="main-content" style="max-width: 100%;">
+    
+    <div class="bento-grid">
+      
+      <a href="marketplace.html" class="bento-card large" style="background: linear-gradient(135deg, rgba(190, 24, 93, 0.05), rgba(190, 24, 93, 0.15)); border-color: rgba(190, 24, 93, 0.3);">
+        <div class="bento-icon">🛒</div>
+        <div>
+          <h3 style="font-size: 24px;">Buy / Sell / Donate</h3>
+          <p>Campus marketplace for all your needs. Buy, sell, or rent textbooks, drafters, and hostel gear directly from your seniors. Check out the new <b>Midnight Bounties</b> and <b>Mystery Items</b>!</p>
+          <span class="badge badge-sell" style="margin-top: 12px;">Live Updates via Google Sheets</span>
+        </div>
+      </a>
 
-  <!-- ANNOUNCEMENTS -->
-  <div id="announcements">
-    <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:20px;">
-      <h2 style="font-size:22px;">📢 Notice Board</h2>
-      <span style="font-size:13px;color:var(--text-muted);">4 announcements</span>
-    </div>
-    <div style="display:flex;flex-direction:column;gap:12px;">
-      <div class="announce-card">
-        <div class="announce-dot"></div>
+      <a href="lost-found.html" class="bento-card">
+        <div class="bento-icon">❓</div>
+        <h3>Lost & Found</h3>
+        <p>Report or find missing items. Let the campus community help you get your belongings back.</p>
+      </a>
+
+      <a href="pgs.html" class="bento-card">
+        <div class="bento-icon">🏠</div>
+        <h3>PG Listings</h3>
+        <p>Find student-reviewed PGs and hostels near GEU with details on rent, WiFi, and meal availability.</p>
+      </a>
+
+      <a href="cafes.html" class="bento-card">
+        <div class="bento-icon">☕</div>
+        <h3>Nearby Cafes</h3>
+        <p>Discover the best Maggi spots, top-rated cafes, and food joints right outside the university.</p>
+      </a>
+
+      <div class="bento-card" style="border: 2px dashed var(--border); display: flex; justify-content: center; align-items: center; text-align: center;">
         <div>
-          <h4>Mid-Semester Exam Schedule Released</h4>
-          <p>The schedule for B.Tech mid-semester examinations has been uploaded to the ERP portal. Check your respective department.</p>
-          <div class="date">May 1, 2026 · Academic</div>
-        </div>
-      </div>
-      <div class="announce-card">
-        <div class="announce-dot" style="background:#16A34A"></div>
-        <div>
-          <h4>Hackathon 2026 — Registrations Open</h4>
-          <p>Annual GEU Hackathon is back! Register your team of 2–4 students before May 15. Theme: Smart Campus Solutions.</p>
-          <div class="date">Apr 29, 2026 · Events</div>
-        </div>
-      </div>
-      <div class="announce-card">
-        <div class="announce-dot" style="background:#D97706"></div>
-        <div>
-          <h4>Library Timings Extended for Exams</h4>
-          <p>The central library will remain open until 10 PM from May 5–20 to support students preparing for semester exams.</p>
-          <div class="date">Apr 27, 2026 · Campus</div>
-        </div>
-      </div>
-      <div class="announce-card">
-        <div class="announce-dot" style="background:#9333EA"></div>
-        <div>
-          <h4>New Shuttle Route Added — Dehradun Central</h4>
-          <p>A new shuttle service connecting GEU main gate to Dehradun ISBT has been added. Timing: 6 AM and 8 PM daily.</p>
-          <div class="date">Apr 24, 2026 · Transport</div>
+          <div class="bento-icon" style="font-size: 32px;">🚀</div>
+          <h3>More Coming Soon</h3>
+          <p style="font-size: 12px; margin-top: 8px;">Event Calendars, Study Groups & More!</p>
         </div>
       </div>
     </div>
-  </div>
 
-
-
+    <section id="announcements" style="margin-top: 20px;">
+        <h2 style="font-family: 'Syne', sans-serif; margin-bottom: 20px; font-size: 28px;">📢 Notice Board</h2>
+        <div class="card-grid" style="grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));">
+            <div class="card">
+                <h4 style="font-size: 16px;">END-Semester Exam Schedule Released</h4>
+                <p style="font-size: 13px; color: var(--text-muted); margin: 8px 0; line-height: 1.5;">The schedule for B.Tech End-semester examinations has been uploaded to the ERP portal. Check your respective department.</p>
+                <span style="font-size: 11px; color: var(--text-light); font-weight: bold;">May 1, 2026 · Academic</span>
+            </div>
+            <div class="card">
+                <h4 style="font-size: 16px;">Hackathon 2026 — Registrations Open</h4>
+                <p style="font-size: 13px; color: var(--text-muted); margin: 8px 0; line-height: 1.5;">Annual GEU Hackathon is back! Register your team of 2–4 students before 20 MARCH . Theme: Smart Campus Solutions.</p>
+                <span style="font-size: 11px; color: var(--text-light); font-weight: bold;">FEB 20, 2026 · Events</span>
+            </div>
+            <div class="card">
+                <h4 style="font-size: 16px;">Library Timings Extended for Exams</h4>
+                <p style="font-size: 13px; color: var(--text-muted); margin: 8px 0; line-height: 1.5;">The central library will remain open until 10 PM from May 5–20 to support students preparing for semester exams.</p>
+                <span style="font-size: 11px; color: var(--text-light); font-weight: bold;">Apr 27, 2026 · Campus</span>
+            </div>
+            <div class="card">
+                <h4 style="font-size: 16px;">New Shuttle Route Added</h4>
+                <p style="font-size: 13px; color: var(--text-muted); margin: 8px 0; line-height: 1.5;">A new shuttle service connecting GEU main gate to Dehradun ISBT has been added. Timing: 6 AM and 8 PM daily.</p>
+                <span style="font-size: 11px; color: var(--text-light); font-weight: bold;">Apr 24, 2026 · Transport</span>
+            </div>
+            <div class="card">
+                <h4 style="font-size: 16px;">Campus Placement Drive 2026</h4>
+                <p style="font-size: 13px; color: var(--text-muted); margin: 8px 0; line-height: 1.5;">Pre-placement talks for B.Tech CSE (7th Sem) will be held in the main auditorium on May 8. Bring 2 copies of your resume.</p>
+                <span style="font-size: 11px; color: var(--text-light); font-weight: bold;">May 3, 2026 · Placement Cell</span>
+            </div>
+            <div class="card">
+                <h4 style="font-size: 16px;">Sports Meet Registration</h4>
+                <p style="font-size: 13px; color: var(--text-muted); margin: 8px 0; line-height: 1.5;">The annual inter-departmental basketball tournament starts next week. Register your team before Friday at the sports complex.</p>
+                <span style="font-size: 11px; color: var(--text-light); font-weight: bold;">May 2, 2026 · Sports</span>
+            </div>
+        </div>
+    </section>
+  </main>
 </div>
 
-<!-- FOOTER -->
 <footer>
   <div class="footer-inner">
     <div class="footer-brand">
-      <div style="display:flex;align-items:center;gap:10px;margin-bottom:10px;"><img src="logo.png" alt="Logo" style="height:40px;width:40px;object-fit:contain;border-radius:50%;border:2px solid var(--gold);background:white;"><div class="logo" style="margin-bottom:0">GEU <span>Nexus</span></div></div>
-      <p>A student-built platform connecting the GEU campus community — for lost items, marketplace, and campus life.</p>
+        <div style="display:flex;align-items:center;gap:10px;margin-bottom:10px;">
+            <img src="logo.png" alt="Logo" style="height:40px;width:40px;object-fit:contain;border-radius:50%;border:2px solid var(--gold);background:white;">
+            <div class="logo" style="margin-bottom:0">GEU <span>Nexus</span></div>
+        </div>
+        <p>A student-built platform connecting the GEU campus community — for lost items, marketplace, and campus life.</p>
     </div>
     <div class="footer-col">
-      <h4>Features</h4>
-      <ul>
-        <li><a href="lost-found.html">Lost & Found</a></li>
-        <li><a href="marketplace.html">Marketplace</a></li>
-        <li><a href="cafes.html">Nearby Cafes</a></li>
-        <li><a href="pgs.html">PG Listings</a></li>
-      </ul>
+        <h4>Features</h4>
+        <ul>
+          <li><a href="lost-found.html">Lost & Found</a></li>
+          <li><a href="marketplace.html">Marketplace</a></li>
+          <li><a href="cafes.html">Cafes</a></li>
+          <li><a href="pgs.html">PGs</a></li>
+        </ul>
     </div>
     <div class="footer-col">
-      <h4>Campus</h4>
-      <ul>
-        <li><a href="#announcements">Notice Board</a></li>
-        <li><a href="#">ERP Portal</a></li>
-        <li><a href="#">Library</a></li>
-      </ul>
+        <h4>Campus</h4>
+        <ul>
+          <li><a href="#announcements">Notices</a></li>
+          <li><a href="https://erp.geu.ac.in/" target="_blank">ERP Portal 🚀</a></li>
+          <li><a href="login.html">Logout</a></li>
+        </ul>
     </div>
     <div class="footer-col">
-      <h4>Contact</h4>
-      <ul>
-      <li><a href="javascript:openModal('aboutModal')">About</a></li>
-        <li><a href="#">Report Issue</a></li>
-        <li><a href="#">Feedback</a></li>
-        <li><a href="#">Instagram</a></li>
-      </ul>
+        <h4>Contact</h4>
+        <ul>
+          <li><a href="javascript:openModal('aboutModal')">About</a></li>
+          <li><a href="https://docs.google.com/forms/d/e/1FAIpQLSen5QQnSCdfokcOlZZ3UShRDWKSzL5T266w-ZXNecOzE0ox9g/viewform" target="_blank">Report Issue</a></li>
+          <li><a href="https://docs.google.com/forms/d/e/1FAIpQLSen5QQnSCdfokcOlZZ3UShRDWKSzL5T266w-ZXNecOzE0ox9g/viewform" target="_blank">Feedback</a></li>
+          <li><a href="https://www.instagram.com/geu_nexus?igsh=MWMzbzMxN2RkOHRjcw==" target="_blank">Instagram</a></li>
+        </ul>
     </div>
   </div>
   <div class="footer-bottom">
@@ -320,55 +304,6 @@
   </div>
 </footer>
 
-<script src="app.js"></script>
-<script>
-const searchData = [
-  { cat:'Lost & Found', name:'Blue Water Bottle', sub:'Reported near Cafeteria Block', href:'lost-found.html' },
-  { cat:'Lost & Found', name:'Samsung Galaxy Buds', sub:'Lost at Library reading hall', href:'lost-found.html' },
-  { cat:'Lost & Found', name:'Student ID Card', sub:'Found at Main Gate', href:'lost-found.html' },
-  { cat:'Marketplace', name:'Engineering Mathematics Book', sub:'₹180 · 2nd Year CSE', href:'marketplace.html' },
-  { cat:'Marketplace', name:'Study Table (Free Donation)', sub:'Hostel Block A', href:'marketplace.html' },
-  { cat:'Marketplace', name:'Casio Scientific Calculator', sub:'₹350 · Good condition', href:'marketplace.html' },
-  { cat:'Cafe', name:'Campus Bites', sub:'50m from Main Gate · ⭐ 4.3', href:'cafes.html' },
-  { cat:'Cafe', name:'The GEU Grind', sub:'Inside campus · ⭐ 4.6', href:'cafes.html' },
-  { cat:'PG', name:'Sunrise PG for Boys', sub:'₹5500/mo · 200m from campus', href:'pgs.html' },
-  { cat:'PG', name:'GreenView Girls PG', sub:'₹6000/mo · AC rooms available', href:'pgs.html' },
-];
-
-const heroSearch = document.getElementById('heroSearch');
-const resultsBox = document.getElementById('searchResults');
-
-heroSearch.addEventListener('input', () => {
-  const q = heroSearch.value.trim().toLowerCase();
-  if (!q) { resultsBox.classList.remove('open'); return; }
-  const matches = searchData.filter(d =>
-    d.name.toLowerCase().includes(q) || d.cat.toLowerCase().includes(q) || d.sub.toLowerCase().includes(q)
-  );
-  if (!matches.length) { resultsBox.classList.remove('open'); return; }
-  resultsBox.innerHTML = matches.map(m => `
-    <a href="${m.href}" class="search-item">
-      <span class="si-cat">${m.cat}</span>
-      <div><div class="si-name">${m.name}</div><div class="si-sub">${m.sub}</div></div>
-    </a>
-  `).join('');
-  resultsBox.classList.add('open');
-});
-
-document.addEventListener('click', e => {
-  if (!heroSearch.contains(e.target) && !resultsBox.contains(e.target))
-    resultsBox.classList.remove('open');
-});
-
-function doSearch() {
-  const q = heroSearch.value.trim();
-  if (q) showToast(`Searching for "${q}"...`);
-}
-
-
-  document.getElementById('loginEmail').value = '';
-  document.getElementById('loginPass').value = '';
-  showToast('Logged out successfully.');
-</script>
 <div id="aboutModal" class="modal" style="display:none; position:fixed; top:0; left:0; width:100%; height:100%; background:rgba(0,0,0,0.5); align-items:center; justify-content:center; z-index:1000;">
   <div class="modal-content" style="background:var(--surface); padding:24px; border-radius:var(--radius-lg); width:90%; max-width:480px; border:1px solid var(--border); box-shadow:0 10px 25px rgba(0,0,0,0.2);">
     <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:16px;">
@@ -405,5 +340,7 @@ function doSearch() {
     </div>
   </div>
 </div>
+
+<script src="app.js"></script>
 </body>
 </html>

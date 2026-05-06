@@ -449,3 +449,119 @@ body.dark-theme .modal {
 .theme-toggle:hover {
   background: var(--surface2);
 }
+/* --- NEW HOME PAGE STYLES --- */
+.hero-section {
+  text-align: center;
+  padding: 80px 20px 60px;
+  background: radial-gradient(circle at top, var(--surface2), var(--bg));
+  border-bottom: 1px solid var(--border);
+  position: relative;
+  overflow: hidden;
+}
+
+.hero-title {
+  font-family: 'Syne', sans-serif;
+  font-size: clamp(36px, 6vw, 56px);
+  font-weight: 800;
+  line-height: 1.1;
+  margin-bottom: 16px;
+  background: linear-gradient(135deg, var(--accent), #f472b6);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+}
+
+.hero-subtitle {
+  font-size: 18px;
+  color: var(--text-muted);
+  max-width: 600px;
+  margin: 0 auto 30px;
+  line-height: 1.6;
+}
+
+/* Bento Grid (Features) */
+.bento-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+  gap: 20px;
+  padding: 40px 20px;
+  max-width: 1100px;
+  margin: 0 auto;
+}
+
+.bento-card {
+  background: var(--surface);
+  border: 1px solid var(--border);
+  border-radius: 24px;
+  padding: 30px;
+  transition: all 0.3s cubic-bezier(0.25, 0.8, 0.25, 1);
+  text-decoration: none;
+  color: var(--text);
+  display: flex;
+  flex-direction: column;
+  position: relative;
+  overflow: hidden;
+}
+
+.bento-card:hover {
+  transform: translateY(-5px);
+  box-shadow: 0 15px 30px rgba(0,0,0,0.08);
+  border-color: var(--accent);
+}
+
+.bento-icon {
+  font-size: 48px;
+  margin-bottom: 16px;
+  display: inline-block;
+  transition: transform 0.3s ease;
+}
+
+.bento-card:hover .bento-icon {
+  transform: scale(1.1) rotate(-5deg);
+}
+
+.bento-card h3 {
+  font-size: 22px;
+  margin-bottom: 8px;
+  font-family: 'Syne', sans-serif;
+}
+
+.bento-card p {
+  font-size: 14px;
+  color: var(--text-muted);
+  line-height: 1.5;
+}
+
+/* Animated Notice Marquee */
+.notice-marquee {
+  background: var(--accent);
+  color: white;
+  padding: 10px 0;
+  overflow: hidden;
+  white-space: nowrap;
+  display: flex;
+  align-items: center;
+  font-size: 14px;
+  font-weight: 600;
+}
+
+.notice-content {
+  display: inline-block;
+  padding-left: 100%;
+  animation: marquee 20s linear infinite;
+}
+
+@keyframes marquee {
+  0% { transform: translate(0, 0); }
+  100% { transform: translate(-100%, 0); }
+}
+
+/* Make the Marketplace card span 2 columns on wide screens */
+@media (min-width: 768px) {
+  .bento-card.large {
+    grid-column: span 2;
+    flex-direction: row;
+    align-items: center;
+    gap: 30px;
+  }
+  .bento-card.large .bento-icon { font-size: 80px; margin-bottom: 0; }
+}
