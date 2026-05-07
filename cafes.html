@@ -38,7 +38,6 @@
   </ul>
 <div class="nav-right" style="display: flex; align-items: center; gap: 8px;">
     <button id="themeToggle" class="theme-toggle" onclick="toggleTheme()" title="Toggle Dark Mode">🌙</button>
-    
     <a href="login.html" class="btn btn-outline">Logout</a>
     <button class="hamburger" id="hamburger"><span></span><span></span><span></span></button>
   </div>
@@ -51,7 +50,7 @@
   </div>
   <div style="display: flex; gap: 16px; align-items: center;">
     <span style="font-size:13px;color:var(--text-muted);display:none;">📍 Dehradun, Uttarakhand</span>
-    <a href="https://docs.google.com/forms/d/e/1FAIpQLSdXRW5_q6tGllxsykFJ0y8eL5Bu8cXXNH9uBuoc0ma-sV8KBA/viewform?usp=header" target="_blank" class="btn btn-primary">➕ Recommend a Cafe</a>
+    <a href="https://docs.google.com/forms/d/e/1FAIpQLSfT9nDOwPLNq3CzJP0L1ryblUh9RVnD8qVknxMWQJowe15NSw/viewform" target="_blank" class="btn btn-primary">➕ Rate a Cafe</a>
   </div>
 </div>
 
@@ -61,8 +60,8 @@
       <h3>Distance</h3>
       <label><input type="radio" name="dist" class="filter-radio" value="all" checked> All</label>
       <label><input type="radio" name="dist" class="filter-radio" value="walking"> Walking (on campus)</label>
-      <label><input type="radio" name="dist" class="filter-radio" value="near"> &lt; 500m</label>
-      <label><input type="radio" name="dist" class="filter-radio" value="far"> &lt; 2km</label>
+      <label><input type="radio" name="dist" class="filter-radio" value="near"> < 500m</label>
+      <label><input type="radio" name="dist" class="filter-radio" value="far"> < 2km</label>
     </div>
     <hr class="sidebar-divider">
     <div class="filter-group">
@@ -84,7 +83,7 @@
 
   <main class="main-content">
     <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:16px;">
-      <p class="section-title" id="cafeCount">Loading cafes...</p>
+      <p class="section-title" id="cafeCount">Loading live data...</p>
     </div>
     
     <div class="card-grid" id="cafeGrid">
@@ -110,7 +109,6 @@
   </div>
 </footer>
 
-<script src="app.js"></script>
 <div id="aboutModal" class="modal" style="display:none; position:fixed; top:0; left:0; width:100%; height:100%; background:rgba(0,0,0,0.5); align-items:center; justify-content:center; z-index:1000;">
   <div class="modal-content" style="background:var(--surface); padding:24px; border-radius:var(--radius-lg); width:90%; max-width:480px; border:1px solid var(--border); box-shadow:0 10px 25px rgba(0,0,0,0.2);">
     <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:16px;">
@@ -147,5 +145,154 @@
     </div>
   </div>
 </div>
+
+<script src="app.js"></script>
+<script>
+  const GOOGLE_SHEET_CSV_URL = "https://docs.google.com/spreadsheets/d/e/2PACX-1vSamnMHdTRI3bpUt5pNw7XYF182FVCwTAPWJR05X4YQmkyLVix2mhHFexltk_2-r_wYxjooy4H4e9JE/pub?output=csv";
+
+  // CSV Parser
+  function parseCSV(str) {
+    const arr = [];
+    let quote = false;
+    let row = 0, col = 0;
+    for (let c = 0; c < str.length; c++) {
+      let cc = str[c], nc = str[c+1];
+      arr[row] = arr[row] || [];
+      arr[row][col] = arr[row][col] || '';
+      if (cc == '"' && quote && nc == '"') { arr[row][col] += cc; ++c; continue; }
+      if (cc == '"') { quote = !quote; continue; }
+      if (cc == ',' && !quote) { ++col; continue; }
+      if (cc == '\r' && nc == '\n' && !quote) { ++row; col = 0; ++c; continue; }
+      if (cc == '\n' && !quote) { ++row; col = 0; continue; }
+      if (cc == '\r' && !quote) { ++row; col = 0; continue; }
+      arr[row][col] += cc;
+    }
+    return arr;
+  }
+
+  // Smart Icon Generator
+  function getCafeIcon(cafeName) {
+    const name = cafeName.toLowerCase();
+    if (name.includes('burger')) return '🍔';
+    if (name.includes('pizza')) return '🍕';
+    if (name.includes('paratha')) return '🍛';
+    if (name.includes('tibet') || name.includes('momo') || name.includes('gangchen')) return '🥟';
+    if (name.includes('waffle') || name.includes('cake') || name.includes('tammna')) return '🧇';
+    if (name.includes('chai') || name.includes('coffee') || name.includes('sutta') || name.includes('cafe')) return '☕';
+    if (name.includes('bhojnalaya') || name.includes('dhaba') || name.includes('hut')) return '🍲';
+    if (name.includes('quick') || name.includes('snack') || name.includes('bites')) return '🍟';
+    if (name.includes('shop') || name.includes('tuck')) return '🥪';
+    const fallbacks = ['🍱', '🌮', '🥗', '🥘', '🥡'];
+    return fallbacks[cafeName.length % fallbacks.length];
+  }
+
+  async function loadCafeData() {
+    try {
+      const freshUrl = GOOGLE_SHEET_CSV_URL + "&cachebuster=" + new Date().getTime();
+      const response = await fetch(freshUrl);
+      const csvText = await response.text();
+      
+      const rows = parseCSV(csvText);
+      const grid = document.getElementById('cafeGrid');
+      
+      if (rows.length < 2) {
+          grid.innerHTML = `<p style="color: var(--text-muted); grid-column: 1/-1; text-align: center;">Sheet connected, but 0 responses found.</p>`;
+          return;
+      }
+
+      const headers = rows[0];
+      rows.shift(); // Remove the header row
+      
+      const cafeDatabase = {};
+
+      rows.forEach((row, studentIndex) => {
+        // We know from the diagnostic that ratings start EXACTLY at column 5
+        for (let i = 5; i < headers.length; i++) {
+            let headerText = headers[i];
+            let cellValue = row[i];
+
+            if (!headerText || !cellValue) continue;
+
+            // BULLETPROOF SPLIT: Slices "Happiness Hut (GEU) [Food quality]" at the "[" 
+            let splitHeader = headerText.split('[');
+            if (splitHeader.length < 2) continue; // Skip if it's not a rating column
+
+            let cafeName = splitHeader[0].trim(); // Leaves us with exactly "Happiness Hut (GEU)"
+
+            // Extractor: Grabs just the number from "5 (Excellent)" or "4"
+            let numMatch = String(cellValue).match(/\d+/);
+            let rating = numMatch ? parseInt(numMatch[0]) : 0;
+
+            if (isNaN(rating) || rating === 0) continue;
+
+            if (!cafeDatabase[cafeName]) {
+                cafeDatabase[cafeName] = { 
+                    totalScore: 0, 
+                    ratingCount: 0, 
+                    uniqueReviewers: new Set() 
+                };
+            }
+
+            // Tally the scores
+            cafeDatabase[cafeName].totalScore += rating;
+            cafeDatabase[cafeName].ratingCount += 1;
+            cafeDatabase[cafeName].uniqueReviewers.add(studentIndex);
+        }
+      });
+
+      const cafeNames = Object.keys(cafeDatabase);
+      grid.innerHTML = ''; 
+
+      if(cafeNames.length === 0) {
+          document.getElementById('cafeCount').innerText = "0 cafes processed";
+          grid.innerHTML = `<p style="color: var(--text-muted); grid-column: 1 / -1; text-align: center;">Data is flowing, but no ratings found.</p>`;
+          return;
+      }
+
+      document.getElementById('cafeCount').innerText = `${cafeNames.length} Rated Cafes Available`;
+
+      cafeNames.forEach(cafeName => {
+        const data = cafeDatabase[cafeName];
+        
+        // Calculate the true average (Total Score / Number of metrics rated)
+        const averageRating = (data.totalScore / data.ratingCount).toFixed(1);
+        const studentCount = data.uniqueReviewers.size;
+        
+        const dynamicIcon = getCafeIcon(cafeName);
+
+        const cardHTML = `
+          <div class="card filterable-card">
+            <div class="cafe-img">${dynamicIcon}</div>
+            
+            <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:4px;">
+              <h3 style="font-size:18px;">${cafeName}</h3>
+              <span style="background:var(--accent); color:white; padding:4px 8px; border-radius:6px; font-weight:bold; font-size:12px;">
+                ⭐ ${averageRating}
+              </span>
+            </div>
+            <p style="font-size:13px; color:var(--text); margin-bottom:8px; line-height: 1.4;">
+              <strong>Category:</strong> <span style="color:var(--text-muted);">Campus Favorite</span>
+            </p>
+            <div class="cafe-meta">
+              <span>📍 GEU Campus & Nearby</span>
+              <span>📝 ${studentCount} Student Review(s)</span>
+            </div>
+            <button class="btn btn-outline" style="width:100%; justify-content:center; margin-top: auto;" 
+              onclick="window.open('https://maps.google.com/?q=${encodeURIComponent(cafeName + ' Dehradun Graphic Era')}', '_blank')">
+              Get Directions
+            </button>
+          </div>
+        `;
+        grid.insertAdjacentHTML('beforeend', cardHTML);
+      });
+
+    } catch (error) {
+      document.getElementById('cafeGrid').innerHTML = `<p style="color: red; grid-column: 1/-1; text-align:center;">Critical Error loading data.</p>`;
+      console.error(error);
+    }
+  }
+
+  window.addEventListener('DOMContentLoaded', loadCafeData);
+</script>
 </body>
 </html>

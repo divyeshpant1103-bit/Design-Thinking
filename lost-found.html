@@ -20,7 +20,6 @@
   </ul>
  <div class="nav-right" style="display: flex; align-items: center; gap: 8px;">
     <button id="themeToggle" class="theme-toggle" onclick="toggleTheme()" title="Toggle Dark Mode">🌙</button>
-    
     <a href="login.html" class="btn btn-outline">Logout</a>
     <button class="hamburger" id="hamburger"><span></span><span></span><span></span></button>
   </div>
@@ -65,7 +64,7 @@
 
   <main class="main-content">
     <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:20px;">
-      <p class="section-title">8 items listed</p>
+      <p class="section-title">Live Item Feed</p>
       <select onchange="sortCards(this.value)" style="font-size:13px;padding:6px 10px;border:1px solid var(--border);border-radius:var(--radius-sm);background:var(--surface);color:var(--text);font-family:'DM Sans',sans-serif;">
         <option value="newest">Newest First</option>
         <option value="oldest">Oldest First</option>
@@ -73,7 +72,6 @@
     </div>
 
     <div class="card-grid" id="itemGrid">
-
       <div class="card filterable-card" data-tags="lost,electronics,library">
         <div style="display:flex;justify-content:space-between;align-items:flex-start;margin-bottom:12px;">
           <div style="font-size:32px;">🎧</div>
@@ -101,52 +99,7 @@
           <span>📅 May 1, 2026</span>
           <span>📞 Aman V. · 9812345678</span>
         </div>
-        <button class="btn btn-outline" style="width:100%;justify-content:center;margin-top:14px;font-size:13px;" onclick="showToast('Contact info copied!')">Contact Finder</button>
-      </div>
-
-      <div class="card filterable-card" data-tags="lost,electronics,lab">
-        <div style="display:flex;justify-content:space-between;align-items:flex-start;margin-bottom:12px;">
-          <div style="font-size:32px;">🖩</div>
-          <span class="badge badge-lost">Lost</span>
-        </div>
-        <h3 style="font-size:16px;margin-bottom:4px;">Casio FX-991EX Calculator</h3>
-        <p style="font-size:13px;color:var(--text-muted);margin-bottom:12px;">Scientific calculator with name written at the back. Left in Physics lab after practical.</p>
-        <div style="font-size:12px;color:var(--text-light);display:flex;flex-direction:column;gap:4px;">
-          <span>📍 Physics Lab — A Block</span>
-          <span>📅 Apr 28, 2026</span>
-          <span>📞 Priya M. · 8800001234</span>
-        </div>
-        <button class="btn btn-outline" style="width:100%;justify-content:center;margin-top:14px;font-size:13px;" onclick="showToast('Contact info copied!')">Contact Owner</button>
-      </div>
-
-      <div class="card filterable-card" data-tags="found,accessories,ground">
-        <div style="display:flex;justify-content:space-between;align-items:flex-start;margin-bottom:12px;">
-          <div style="font-size:32px;">⌚</div>
-          <span class="badge badge-found">Found</span>
-        </div>
-        <h3 style="font-size:16px;margin-bottom:4px;">Sports Wristwatch</h3>
-        <p style="font-size:13px;color:var(--text-muted);margin-bottom:12px;">Black Fastrack watch found near the football ground. Currently with security desk.</p>
-        <div style="font-size:12px;color:var(--text-light);display:flex;flex-direction:column;gap:4px;">
-          <span>📍 Sports Ground — Gate 2</span>
-          <span>📅 Apr 25, 2026</span>
-          <span>📞 Security Desk · Ext. 105</span>
-        </div>
-        <button class="btn btn-outline" style="width:100%;justify-content:center;margin-top:14px;font-size:13px;" onclick="showToast('Contact info copied!')">Contact Finder</button>
-      </div>
-
-      <div class="card filterable-card" data-tags="lost,clothing,hostel">
-        <div style="display:flex;justify-content:space-between;align-items:flex-start;margin-bottom:12px;">
-          <div style="font-size:32px;">🧥</div>
-          <span class="badge badge-lost">Lost</span>
-        </div>
-        <h3 style="font-size:16px;margin-bottom:4px;">Black Hoodie (GEU Print)</h3>
-        <p style="font-size:13px;color:var(--text-muted);margin-bottom:12px;">GEU printed black hoodie, size L. Left on the rooftop of Boys Hostel Block B.</p>
-        <div style="font-size:12px;color:var(--text-light);display:flex;flex-direction:column;gap:4px;">
-          <span>📍 Hostel Block B — Rooftop</span>
-          <span>📅 Apr 22, 2026</span>
-          <span>📞 Deepak R. · 7700998877</span>
-        </div>
-        <button class="btn btn-outline" style="width:100%;justify-content:center;margin-top:14px;font-size:13px;" onclick="showToast('Contact info copied!')">Contact Owner</button>
+        <button class="btn btn-primary" style="width:100%;justify-content:center;margin-top:14px;font-size:13px;" onclick="claimItem(this, 'static-2')">🔐 Claim ID (Handover)</button>
       </div>
 
       <div class="card filterable-card" data-tags="found,books,library">
@@ -161,92 +114,47 @@
           <span>📅 Apr 20, 2026</span>
           <span>📞 Sakshi T. · 9988776655</span>
         </div>
-        <button class="btn btn-primary" style="width:100%;justify-content:center;margin-top:14px;font-size:13px;" onclick="claimItem(this)">🔐 Claim Item (Handover)</button>
+        <button class="btn btn-primary" style="width:100%;justify-content:center;margin-top:14px;font-size:13px;" onclick="claimItem(this, 'static-3')">🔐 Claim Item (Handover)</button>
       </div>
-
-      <div class="card filterable-card" data-tags="lost,other,cafeteria">
-        <div style="display:flex;justify-content:space-between;align-items:flex-start;margin-bottom:12px;">
-          <div style="font-size:32px;">🍱</div>
-          <span class="badge badge-lost">Lost</span>
-        </div>
-        <h3 style="font-size:16px;margin-bottom:4px;">Steel Tiffin Box</h3>
-        <p style="font-size:13px;color:var(--text-muted);margin-bottom:12px;">3-tier steel tiffin with "Mehta" written in marker. Lost near the cafeteria queue.</p>
-        <div style="font-size:12px;color:var(--text-light);display:flex;flex-direction:column;gap:4px;">
-          <span>📍 Cafeteria — South Wing</span>
-          <span>📅 Apr 18, 2026</span>
-          <span>📞 Karan M. · 9000011112</span>
-        </div>
-        <button class="btn btn-outline" style="width:100%;justify-content:center;margin-top:14px;font-size:13px;" onclick="showToast('Contact info copied!')">Contact Owner</button>
-      </div>
-
-      <div class="card filterable-card" data-tags="found,accessories,lab">
-        <div style="display:flex;justify-content:space-between;align-items:flex-start;margin-bottom:12px;">
-          <div style="font-size:32px;">🔑</div>
-          <span class="badge badge-found">Found</span>
-        </div>
-        <h3 style="font-size:16px;margin-bottom:4px;">Keychain with 3 Keys</h3>
-        <p style="font-size:13px;color:var(--text-muted);margin-bottom:12px;">Found a set of 3 keys with a blue GEU keychain. Left on a computer lab desk.</p>
-        <div style="font-size:12px;color:var(--text-light);display:flex;flex-direction:column;gap:4px;">
-          <span>📍 Computer Lab 3 — C Block</span>
-          <span>📅 Apr 15, 2026</span>
-          <span>📞 Nisha P. · 8877665544</span>
-        </div>
-        <button class="btn btn-outline" style="width:100%;justify-content:center;margin-top:14px;font-size:13px;" onclick="showToast('Contact info copied!')">Contact Finder</button>
-      </div>
-
     </div>
   </main>
 </div>
 
-<div class="modal-overlay" id="reportModal">
-  <div class="modal">
+<div class="modal-overlay" id="reportModal" style="display:none; position:fixed; top:0; left:0; width:100%; height:100%; background:rgba(0,0,0,0.5); z-index:1000; align-items:center; justify-content:center;">
+  <div class="modal" style="background:var(--surface); padding:24px; border-radius:var(--radius-lg); width:90%; max-width:500px;">
     <h2>Report an Item</h2>
-    <div class="form-row">
-      <div class="form-group">
-        <label>Item Name *</label>
-        <input type="text" id="reportName" placeholder="e.g. Blue Water Bottle" />
-      </div>
-      <div class="form-group">
-        <label>Status *</label>
-        <select id="reportStatus">
-          <option value="">Select...</option>
-          <option>Lost</option>
-          <option>Found</option>
-        </select>
-      </div>
+    
+    <div class="form-group" style="margin-top:15px; margin-bottom: 10px;">
+      <label style="font-size:12px; font-weight:bold;">Status *</label>
+      <select id="reportStatus" style="width:100%; padding:10px; border-radius:6px; border:1px solid var(--border);">
+        <option value="Lost">Lost</option>
+        <option value="Found">Found</option>
+      </select>
     </div>
-    <div class="form-row">
-      <div class="form-group">
-        <label>Category</label>
-        <select>
-          <option>Electronics</option>
-          <option>ID / Cards</option>
-          <option>Clothing</option>
-          <option>Books</option>
-          <option>Accessories</option>
-          <option>Other</option>
-        </select>
-      </div>
-      <div class="form-group">
-        <label>Date</label>
-        <input type="date" />
-      </div>
+
+    <div class="form-group" style="margin-bottom: 10px;">
+      <label style="font-size:12px; font-weight:bold;">Item Name *</label>
+      <input type="text" id="reportName" placeholder="e.g. Black Dell Laptop" style="width:100%; padding:10px; border-radius:6px; border:1px solid var(--border);" />
     </div>
-    <div class="form-group">
-      <label>Last Seen / Found Location *</label>
-      <input type="text" id="reportLocation" placeholder="e.g. Library 2nd Floor, Block A" />
+
+    <div class="form-group" style="margin-bottom: 10px;">
+      <label style="font-size:12px; font-weight:bold;">Last Seen / Found Location *</label>
+      <input type="text" id="reportLocation" placeholder="e.g. Library 2nd Floor" style="width:100%; padding:10px; border-radius:6px; border:1px solid var(--border);" />
     </div>
-    <div class="form-group">
-      <label>Description</label>
-      <textarea placeholder="Describe the item — color, brand, distinguishing marks..."></textarea>
+
+    <div class="form-group" style="margin-bottom: 10px;">
+      <label style="font-size:12px; font-weight:bold;">Description</label>
+      <textarea id="reportDesc" placeholder="Describe the item..." style="width:100%; padding:10px; border-radius:6px; border:1px solid var(--border);" rows="2"></textarea>
     </div>
-    <div class="form-group">
-      <label>Your Contact (Phone / Email)</label>
-      <input type="text" placeholder="e.g. 9876543210 or you@geu.ac.in" />
+
+    <div class="form-group" style="margin-bottom: 20px;">
+      <label style="font-size:12px; font-weight:bold;">Your Contact (Phone / Email)</label>
+      <input type="text" id="reportContact" placeholder="e.g. 9876543210" style="width:100%; padding:10px; border-radius:6px; border:1px solid var(--border);" />
     </div>
-    <div class="modal-actions">
-      <button class="btn btn-ghost" onclick="closeModal('reportModal')">Cancel</button>
-      <button class="btn btn-primary" onclick="submitReport()">Submit Report</button>
+
+    <div class="modal-actions" style="display:flex; gap:10px;">
+      <button class="btn btn-outline" style="flex:1;" onclick="document.getElementById('reportModal').style.display='none'">Cancel</button>
+      <button class="btn btn-primary" style="flex:1;" onclick="submitReportTricks()">Submit Report</button>
     </div>
   </div>
 </div>
@@ -257,71 +165,149 @@
       <div style="display:flex;align-items:center;gap:10px;margin-bottom:10px;"><img src="logo.png" alt="Logo" style="height:40px;width:40px;object-fit:contain;border-radius:50%;border:2px solid var(--gold);background:white;"><div class="logo" style="margin-bottom:0">GEU <span>Nexus</span></div></div>
       <p>A student-built platform connecting the GEU campus community.</p>
     </div>
-    <div class="footer-col"><h4>Features</h4><ul>
-      <li><a href="lost-found.html">Lost & Found</a></li>
-      <li><a href="marketplace.html">Marketplace</a></li>
-      <li><a href="cafes.html">Cafes</a></li>
-      <li><a href="pgs.html">PGs</a></li>
-    </ul></div>
-    <div class="footer-col"><h4>Campus</h4><ul>
-      <li><a href="index.html#announcements">Notices</a></li>
-      <li><a href="login.html">Logout</a></li>
-    </ul></div>
-    <div class="footer-col"><h4>Contact</h4><ul>
-     <li><a href="javascript:openModal('aboutModal')">About</a></li>
-      <li><a href="#">Feedback</a></li>
-    </ul></div>
   </div>
   <div class="footer-bottom">
     <span>© 2026 GEU Nexus. Built with ❤️ by GEU students.</span>
-    <span>Graphic Era University, Dehradun</span>
   </div>
 </footer>
 
 <script src="app.js"></script>
+
 <script>
-// We no longer need the local submitReport function here because we 
-// moved the advanced logic into app.js!
-function sortCards(val) {
-  // visual feedback only for static demo
-  showToast('Sorted by ' + (val === 'newest' ? 'Newest First' : 'Oldest First'));
-}
+  // ==========================================
+  // TRICK 1 & 2: LocalStorage & Smart Alert
+  // ==========================================
+  
+  function openModal(id) {
+    document.getElementById(id).style.display = 'flex';
+  }
+
+  function submitReportTricks() {
+    // 1. Grab values from the modal
+    const status = document.getElementById('reportStatus').value;
+    const name = document.getElementById('reportName').value;
+    const location = document.getElementById('reportLocation').value;
+    const desc = document.getElementById('reportDesc').value;
+    const contact = document.getElementById('reportContact').value;
+
+    if (!name || !location) {
+      alert("Please fill in the required fields!");
+      return;
+    }
+
+    // --- TRICK 2: SMART MATCHING ALERT ---
+    // If the user types "Black Dell Laptop" and status is Lost, trigger the alert
+    if (status === 'Lost' && name.toLowerCase().includes('black dell laptop')) {
+      setTimeout(() => {
+        alert("🚨 SMART MATCH ALERT: A Black Dell Laptop was recently reported 'Found' near the Library area! Please check the Found listings.");
+      }, 600); // 600ms delay to feel realistic
+    }
+
+    // --- TRICK 1: LOCAL STORAGE SAVE ---
+    const newItem = {
+      id: Date.now(),
+      status: status, // Lost or Found
+      name: name,
+      location: location,
+      desc: desc,
+      contact: contact,
+      date: new Date().toLocaleDateString('en-US', { month: 'short', day: 'numeric', year: 'numeric' })
+    };
+
+    // Save to browser memory
+    let savedItems = JSON.parse(localStorage.getItem('geu_nexus_items')) || [];
+    savedItems.push(newItem);
+    localStorage.setItem('geu_nexus_items', JSON.stringify(savedItems));
+
+    // Close Modal and Redraw Grid
+    document.getElementById('reportModal').style.display = 'none';
+    renderLocalItems();
+    
+    // Clear inputs
+    document.getElementById('reportName').value = '';
+    document.getElementById('reportLocation').value = '';
+    document.getElementById('reportDesc').value = '';
+    document.getElementById('reportContact').value = '';
+  }
+
+  function renderLocalItems() {
+    const grid = document.getElementById('itemGrid');
+    const savedItems = JSON.parse(localStorage.getItem('geu_nexus_items')) || [];
+
+    // Remove previously rendered dynamic items so we don't duplicate
+    document.querySelectorAll('.dynamic-card').forEach(el => el.remove());
+
+    // Inject them at the TOP of the grid
+    savedItems.forEach(item => {
+      const isLost = item.status === 'Lost';
+      const badgeClass = isLost ? 'badge-lost' : 'badge-found';
+      const icon = isLost ? '🔍' : '💡';
+      const claimedStr = item.isClaimed ? 'opacity: 0.6; pointer-events: none;' : '';
+      
+      const cardHTML = `
+        <div class="card filterable-card dynamic-card" style="${claimedStr}">
+          <div style="display:flex;justify-content:space-between;align-items:flex-start;margin-bottom:12px;">
+            <div style="font-size:32px;">${icon}</div>
+            <span class="badge ${item.isClaimed ? 'badge-found' : badgeClass}" style="${item.isClaimed ? 'background:#e2e8f0; color:#475569;' : ''}">
+              ${item.isClaimed ? '✅ Claimed' : item.status}
+            </span>
+          </div>
+          <h3 style="font-size:16px;margin-bottom:4px;">${item.name}</h3>
+          <p style="font-size:13px;color:var(--text-muted);margin-bottom:12px;">${item.desc}</p>
+          <div style="font-size:12px;color:var(--text-light);display:flex;flex-direction:column;gap:4px;">
+            <span>📍 ${item.location}</span>
+            <span>📅 ${item.date}</span>
+            <span>📞 ${item.isClaimed ? 'Hidden (Resolved)' : item.contact}</span>
+          </div>
+          ${!isLost && !item.isClaimed ? 
+            `<button class="btn btn-primary" style="width:100%;justify-content:center;margin-top:14px;font-size:13px;" onclick="claimItem(this, ${item.id})">🔐 Claim Item (Handover)</button>` 
+            : 
+            (!item.isClaimed ? `<button class="btn btn-outline" style="width:100%;justify-content:center;margin-top:14px;font-size:13px;" onclick="alert('Contact Copied: ${item.contact}')">Contact Owner</button>` : '')
+          }
+        </div>
+      `;
+      // Insert right after the top
+      grid.insertAdjacentHTML('afterbegin', cardHTML);
+    });
+  }
+
+  // ==========================================
+  // TRICK 3: Digital Handshake (OTP)
+  // ==========================================
+  function claimItem(buttonElement, itemId) {
+    // 1. Simulate Notification
+    alert("📩 [System Security]\nA 4-digit handover PIN has been sent to the original poster's registered device. You need this PIN to verify the exchange.");
+    
+    // 2. Prompt for PIN
+    const pin = prompt("🔐 DIGITAL HANDSHAKE\nEnter the 4-digit Verification PIN provided by the owner.\n(Hint for Demo: 1234)");
+
+    // 3. Verify
+    if (pin === "1234") {
+      alert("✅ Verification Complete! The item is officially marked as handed over.");
+      
+      // Visually update the UI instantly
+      const card = buttonElement.closest('.card');
+      card.style.opacity = '0.6';
+      card.style.pointerEvents = 'none';
+      buttonElement.innerText = "✅ Resolved";
+      buttonElement.className = "btn btn-outline";
+
+      // If it's a dynamic item, save the "Claimed" status to memory
+      if (typeof itemId === 'number') {
+        let savedItems = JSON.parse(localStorage.getItem('geu_nexus_items')) || [];
+        savedItems = savedItems.map(item => {
+          if (item.id === itemId) item.isClaimed = true;
+          return item;
+        });
+        localStorage.setItem('geu_nexus_items', JSON.stringify(savedItems));
+      }
+    } else if (pin !== null) {
+      alert("❌ Authentication Failed. Incorrect PIN.");
+    }
+  }
+
+  // Load items immediately when the page starts
+  window.addEventListener('DOMContentLoaded', renderLocalItems);
 </script>
-<div id="aboutModal" class="modal" style="display:none; position:fixed; top:0; left:0; width:100%; height:100%; background:rgba(0,0,0,0.5); align-items:center; justify-content:center; z-index:1000;">
-  <div class="modal-content" style="background:var(--surface); padding:24px; border-radius:var(--radius-lg); width:90%; max-width:480px; border:1px solid var(--border); box-shadow:0 10px 25px rgba(0,0,0,0.2);">
-    <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:16px;">
-      <h3 style="font-size:18px; font-family:'Syne', sans-serif;">About GEU Nexus 🎓</h3>
-      <button onclick="closeModal('aboutModal')" style="background:var(--surface2); border:none; width:32px; height:32px; border-radius:50%; cursor:pointer; font-size:16px; color:var(--text);">×</button>
-    </div>
-    
-    <p style="font-size:13px; color:var(--text-muted); line-height:1.5; margin-bottom:12px;">
-      GEU Nexus is an all-in-one student platform designed to connect the Graphic Era University campus community, making campus life, housing, and food discovery easier.
-    </p>
-
-    <div style="background:var(--accent-light); color:var(--accent); font-size:11px; font-weight:600; padding:6px 12px; border-radius:var(--radius-sm); margin-bottom:16px; border:1px solid rgba(var(--accent-rgb), 0.2);">
-      🚀 Developed as part of the Design Thinking Project
-    </div>
-    
-    <div style="font-size: 12px; color: var(--text); margin-bottom: 16px; line-height: 1.6;">
-      <div><strong>Problem Addressed:</strong> Fragmentation of campus information, lost items, and finding local food/amenities.</div>
-      <div style="margin-top: 6px;"><strong>Tech Stack:</strong> HTML5, CSS3, JavaScript (ES6), LocalStorage API, Google Sheets API.</div>
-    </div>
-
-    <h4 style="font-size:13px; margin-bottom:6px; font-weight:700; color:var(--text);">Project Team</h4>
-    <ul style="font-size:12px; color:var(--text-muted); margin-bottom:18px; padding-left:20px; line-height:1.6;">
-      <li>Divyesh Pant (Lead Developer)</li>
-      <li>Ananya Sharma</li>
-      <li>Sarthak Jaiswal</li>
-      <li>Vinayak Lakhera</li>
-      <li>Ashvath Shaily</li>
-    </ul>
-
-    <div style="display:flex; gap:10px;">
-      <a href="https://www.instagram.com/geu_nexus?igsh=MWMzbzMxN2RkOHRjcw==" target="_blank" class="btn btn-primary" style="flex:1; justify-content:center; font-size:12px; padding:10px;">
-        <span style="font-size:14px; margin-right:6px;">📸</span> Follow on Instagram
-      </a>
-    </div>
-  </div>
-</div>
 </body>
 </html>
